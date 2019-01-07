@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Dialogs</string>
+
+    <string name="title_info">Info</string>
+    <string name="title_error">Error</string>
+    <string name="title_warning">Warning</string>
+
+    <string name="title_confirm_delete">Confirm Delete</string>
+
 </resources>

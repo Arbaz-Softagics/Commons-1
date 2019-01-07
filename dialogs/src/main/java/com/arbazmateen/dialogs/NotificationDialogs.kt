@@ -1,7 +1,7 @@
 package com.arbazmateen.dialogs
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 
 const val INFO_ICON = 0
 const val WARNING_ICON = 0

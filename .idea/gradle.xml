@@ -10,7 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/dialogs" />
-            <option value="$PROJECT_DIR$/extentions" />
+            <option value="$PROJECT_DIR$/extensions" />
+            <option value="$PROJECT_DIR$/validator" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

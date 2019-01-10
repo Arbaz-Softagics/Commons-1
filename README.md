@@ -12,7 +12,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 ```
 
 ### add this line to app `build.gradle` file
-```
+```gradle
 	dependencies {
 	        implementation 'com.github.ArbazMateen:Commons:0.1.1'
 	}

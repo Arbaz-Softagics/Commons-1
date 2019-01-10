@@ -3,10 +3,10 @@ package com.arbazmateen.dialogs
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 
-const val INFO_ICON = 0
-const val WARNING_ICON = 0
-const val ERROR_ICON = 0
-const val DELETE_ICON = 0
+val INFO_ICON = R.drawable.ic_info
+val WARNING_ICON = R.drawable.ic_warning
+val ERROR_ICON = R.drawable.ic_error
+val DELETE_ICON = R.drawable.ic_delete
 
 fun dialog(context: Context, title: Int, message: String, cancelAble: Boolean, icon: Int): AlertDialog.Builder {
     val dialogBuilder = AlertDialog.Builder(context)

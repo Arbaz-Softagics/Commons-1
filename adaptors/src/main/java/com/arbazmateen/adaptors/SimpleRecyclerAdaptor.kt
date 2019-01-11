@@ -86,6 +86,11 @@ class SimpleRecyclerAdaptor<T> private constructor(
         notifyDataSetChanged()
     }
 
+    fun addDataList(list: MutableList<T>) {
+        dataList.addAll(dataList.size - 1, list)
+        notifyItemRangeInserted(dataList.size - 1, list.size)
+    }
+
     fun removeItemAtPosition(position: Int) {
         dataList.removeAt(position)
         notifyItemRemoved(position)
@@ -181,7 +186,7 @@ class SimpleRecyclerAdaptor<T> private constructor(
 
         fun setDataList(dataList: MutableList<T>) = apply { this.dataList = dataList }
         fun setLayout(layout: Int) = apply { this.layout = layout }
-        fun addView(resId: Int) = apply { viewsList.add(resId) }
+        fun addViews(resId: Int) = apply { viewsList.add(resId) }
         fun addViews(vararg resId: Int) = apply { resId.forEach { viewsList.add(it) } }
         fun addViews(list: List<Int>) = apply { viewsList = list as MutableList<Int> }
 
@@ -266,20 +271,20 @@ class SimpleRecyclerAdaptor<T> private constructor(
                 clickableItem, longClickableItem, hasOptionMenu, optionMenu, optionMenuViewId
             )
 
-            if (onDataBindListener != null) adaptor.setDataBindListener(onDataBindListener!!)
             if (mOnDataBindListener != null) adaptor.setDataBindListener(mOnDataBindListener!!)
+            else if (onDataBindListener != null) adaptor.setDataBindListener(onDataBindListener!!)
 
-            if (onItemClickListener != null) adaptor.setItemClickListener(onItemClickListener!!)
             if (mOnItemClickListener != null) adaptor.setItemClickListener(mOnItemClickListener!!)
+            else if (onItemClickListener != null) adaptor.setItemClickListener(onItemClickListener!!)
 
-            if (onItemLongClickListener != null) adaptor.setItemLongClickListener(onItemLongClickListener!!)
             if (mOnItemLongClickListener != null) adaptor.setItemLongClickListener(mOnItemLongClickListener!!)
+            else if (onItemLongClickListener != null) adaptor.setItemLongClickListener(onItemLongClickListener!!)
 
-            if (onItemChildClickListener != null) adaptor.setItemChildClickListener(onItemChildClickListener!!)
             if (mOnItemChildClickListener != null) adaptor.setItemChildClickListener(mOnItemChildClickListener!!)
+            else if (onItemChildClickListener != null) adaptor.setItemChildClickListener(onItemChildClickListener!!)
 
-            if (onOptionMenuClickListener != null) adaptor.setOptionMenuClickListener(onOptionMenuClickListener!!)
             if (mOnOptionMenuClickListener != null) adaptor.setOptionMenuClickListener(mOnOptionMenuClickListener!!)
+            else if (onOptionMenuClickListener != null) adaptor.setOptionMenuClickListener(onOptionMenuClickListener!!)
 
             return adaptor
         }

@@ -1,6 +1,8 @@
 package com.arbazmateen.dialogs
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
 val INFO_ICON = R.drawable.ic_info
@@ -90,4 +92,18 @@ fun confirmDelete(context: Context,
                   cancelAble: Boolean = false,
                   icon: Int = DELETE_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
+}
+
+fun waitDialog(context: Context, message: String = "Please wait a moment...", cancelAble: Boolean = false): AlertDialog {
+    val dialog = AlertDialog.Builder(context)
+    val view = LayoutInflater.from(context).inflate(R.layout.progross_dialog_layout, null)
+
+    val textView = view.findViewById<TextView>(R.id.message_text)
+
+    textView.text = message
+
+    dialog.setCancelable(cancelAble)
+    dialog.setView(view)
+
+    return dialog.create()
 }

@@ -5,7 +5,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 1. [Dialogs](#Dialogs)
 
 ## Dialogs
-1. [Information Dialog](#InformationDialogs)
+1. [Information Dialog](#Information-Dialogs)
 2. [Warning Dialog](#)
 3. [Error Dialog](#)
 4. [Delete Dialog](#)

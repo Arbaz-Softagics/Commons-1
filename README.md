@@ -3,12 +3,13 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 
 ## Modules
 1. [Dialogs](#Dialogs)
-  * [Information Dialog](#Information Dialogs)
-  * [Warning Dialog](#)
-  * [Error Dialog](#)
-  * [Delete Dialog](#)
 
 ## Dialogs
+1. [Information Dialog](#InformationDialogs)
+2. [Warning Dialog](#)
+3. [Error Dialog](#)
+4. [Delete Dialog](#)
+
 ### Information Dialogs
 ```kotlin
 	infoDialog(

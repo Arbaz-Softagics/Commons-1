@@ -1,3 +1,25 @@
 <resources>
+
     <string name="app_name">Commons</string>
+
+    <string-array name="data_list">
+        <item>Pie</item>
+        <item>Oreo</item>
+        <item>Nougat</item>
+        <item>Marshmallow</item>
+        <item>Lollipop</item>
+        <item>KitKat</item>
+        <item>Jelly Bean"</item>
+        <item>Ice Cream Sandwich</item>
+        <item>Honeycomb</item>
+        <item>Gingerbread</item>
+        <item>Froyo</item>
+        <item>Eclair</item>
+        <item>Donut</item>
+        <item>Cupcake</item>
+        <item>Petit Four</item>
+        <item>Beta</item>
+        <item>Android</item>
+    </string-array>
+
 </resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".DialogExampleActivity">
+
+    <Button
+            android:id="@+id/info_btn"
+            android:drawableStart="@drawable/ic_info"
+            android:text="Info Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/warning_btn"
+            android:drawableStart="@drawable/ic_warning"
+            android:text="Warning Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/error_btn"
+            android:drawableStart="@drawable/ic_error"
+            android:text="Error Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/detele_btn"
+            android:drawableStart="@drawable/ic_delete"
+            android:text="Delete Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/wait_btn"
+            android:text="Wait Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

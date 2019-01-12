@@ -1,3 +1,4 @@
+@file:JvmName("NotificationDialog")
 package com.arbazmateen.dialogs
 
 import android.content.Context
@@ -30,6 +31,7 @@ fun dialog(context: Context, title: String, message: String, cancelAble: Boolean
     }
 }
 
+@JvmOverloads
 fun infoDialog(context: Context,
                message: String,
                title: Int = R.string.title_info,
@@ -38,6 +40,7 @@ fun infoDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun warningDialog(context: Context,
                message: String,
                title: Int = R.string.title_warning,
@@ -46,6 +49,7 @@ fun warningDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun errorDialog(context: Context,
                 message: String,
                 title: Int = R.string.title_error,
@@ -54,6 +58,7 @@ fun errorDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun confirmDelete(context: Context,
                 message: String,
                 title: Int = R.string.title_confirm_delete,
@@ -62,6 +67,7 @@ fun confirmDelete(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun infoDialog(context: Context,
                title: String,
                message: String,
@@ -70,6 +76,7 @@ fun infoDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun warningDialog(context: Context,
                   title: String,
                   message: String,
@@ -78,6 +85,7 @@ fun warningDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun errorDialog(context: Context,
                 title: String,
                 message: String,
@@ -86,6 +94,7 @@ fun errorDialog(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun confirmDelete(context: Context,
                   title: String,
                   message: String,
@@ -94,6 +103,7 @@ fun confirmDelete(context: Context,
     return dialog(context, title, message, cancelAble, icon)
 }
 
+@JvmOverloads
 fun waitDialog(context: Context, message: String = "Please wait a moment...", cancelAble: Boolean = false): AlertDialog {
     val dialog = AlertDialog.Builder(context)
     val view = LayoutInflater.from(context).inflate(R.layout.progross_dialog_layout, null)

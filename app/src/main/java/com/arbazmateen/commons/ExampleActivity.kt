@@ -9,6 +9,8 @@ class ExampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
 
+//        val dataList: List<String> = resources.getStringArray(R.array.data_list).toList()
+
 
 
 

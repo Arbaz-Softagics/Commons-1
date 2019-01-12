@@ -1,6 +1,8 @@
 # Commons
 Common android components, helper functions, adaptors, dialogs, logs and extentions functions that is required for almost every application at startup.
 
+[Dialogs](#Dialogs)
+
 ## Dialogs
 ### Information Dialogs
 ```kotlin
@@ -27,7 +29,8 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
             }.show()
 ```
 
-### How to use
+### How to use dialogs
+#### add this line to project `build.gradle` file
 ```gradle
 	allprojects {
 		repositories {
@@ -35,8 +38,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 		}
 	}
 ```
-
-### add this line to app `build.gradle` file
+#### add this line to app `build.gradle` file
 ```gradle
 	dependencies {
 	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.1'

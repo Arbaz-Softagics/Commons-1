@@ -9,7 +9,8 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 2. [Warning Dialog](#Warning-Dialog)
 3. [Error Dialog](#Error-Dialog)
 4. [Delete Dialog](#Delete-Dialog)
-5. [How to use](#How-to-use-dialogs)
+5. [Wait Dialog](#Wait-Dialog)
+6. [How to use](#How-to-use-dialogs)
 
 ### Information Dialog
 ```kotlin
@@ -102,6 +103,15 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
             }.show()
             .getButton(AlertDialog.BUTTON_POSITIVE)
                 .setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_light))
+```
+
+### Wait Dialog
+```kotlin
+	waitDialog(
+                this,   			// context
+                "Loading, Please wait...",  	// message
+                true    			// cancelable on back press or touch anywhere on the screen
+            ).show()
 ```
 
 ### How to use dialogs

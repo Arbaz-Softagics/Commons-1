@@ -13,7 +13,13 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 6. [How to use](#How-to-use-dialogs)
 7. [Calling From Java](#Calling-from-Java)
 
-![Info Dialog](http://arbazmateen.com/git_commons/info.jpg){:height="700px" width="240px"}
+<p align="center">
+	<img src="http://arbazmateen.com/git_commons/info.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/warning.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/error.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/delete.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/wait.jpg" width="240">
+</p>
 
 ### Information Dialog
 ```kotlin

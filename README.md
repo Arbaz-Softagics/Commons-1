@@ -127,7 +127,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 #### add this line to app `build.gradle` file
 ```gradle
 	dependencies {
-	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.1'
+	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.2'
 	}
 ```
 

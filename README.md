@@ -9,6 +9,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 2. [Warning Dialog](#Warning-Dialog)
 3. [Error Dialog](#Error-Dialog)
 4. [Delete Dialog](#Delete-Dialog)
+5. [How to use](#How-to-use-dialogs)
 
 ### Information Dialog
 ```kotlin

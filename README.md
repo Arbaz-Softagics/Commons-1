@@ -11,6 +11,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 4. [Delete Dialog](#Delete-Dialog)
 5. [Wait Dialog](#Wait-Dialog)
 6. [How to use](#How-to-use-dialogs)
+7. [Calling From Java](#Calling-from-Java)
 
 ### Information Dialog
 ```kotlin
@@ -129,3 +130,24 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.1'
 	}
 ```
+
+### Calling from Java
+```java
+	NotificationDialog.infoDialog(
+                this,
+                "Some informational message"
+        ).setPositiveButton("", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // positive button action
+                dialog.dismiss();
+            }
+        }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // negative button action
+                dialog.dismiss();
+            }
+        }).show();
+```
+

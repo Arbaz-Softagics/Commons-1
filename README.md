@@ -13,6 +13,12 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 6. [How to use](#How-to-use-dialogs)
 7. [Calling From Java](#Calling-from-Java)
 
+![Info Dialog](http://arbazmateen.com/git_commons/info.jpg "Info Dialog")
+![Warning Dialog](http://arbazmateen.com/git_commons/warning.jpg "Warning Dialog")
+![Error Dialog](http://arbazmateen.com/git_commons/error.jpg "Error Dialog")
+![Delete Dialog](http://arbazmateen.com/git_commons/delete.jpg "Delete Dialog")
+![Wait Dialog](http://arbazmateen.com/git_commons/wait.jpg "Wait Dialog")
+
 ### Information Dialog
 ```kotlin
 	infoDialog(

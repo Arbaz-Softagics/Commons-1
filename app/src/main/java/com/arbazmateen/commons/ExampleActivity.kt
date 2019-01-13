@@ -1,5 +1,6 @@
 package com.arbazmateen.commons
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
@@ -11,7 +12,7 @@ class ExampleActivity : AppCompatActivity() {
 
 //        val dataList: List<String> = resources.getStringArray(R.array.data_list).toList()
 
-
+        startActivity(Intent(this, DialogExampleActivity::class.java))
 
 
     }

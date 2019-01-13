@@ -63,8 +63,8 @@ inline fun <reified T : Serializable> Activity.getSerializable(key: String): T? 
     return null
 }
 
-fun Activity.copyToClipboard(text: String, msg: String) {
+fun Activity.copyToClipboard(text: String, label: String = "Copy", msg: String = "Copy to clipboard") {
     val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.primaryClip = ClipData.newPlainText("Accounts", text)
+    clipboard.primaryClip = ClipData.newPlainText(label, text)
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }

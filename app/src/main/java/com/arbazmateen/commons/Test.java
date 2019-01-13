@@ -4,7 +4,7 @@ public class Test {
 
     public void ok() {
 
-//        NotificationDialog.infoDialog(
+//        Dialog.infoDialog(
 //                this,
 //                "Some informational message"
 //        ).setPositiveButton("", new DialogInterface.OnClickListener() {

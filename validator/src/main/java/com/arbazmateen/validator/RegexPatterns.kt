@@ -34,14 +34,15 @@ const val REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT = "^[a-zA-Z0-9 -.]+\$"
 const val REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT__ = "^[a-zA-Z0-9 -._]+\$"
 
 const val REGEX_NUMBERS = "^-?[1-9]+[0-9]*\$|^[0-9]+\$"
-const val REGEX_POSITIVE_NUMBERS = "^[1-9]\\d*\$"
+const val REGEX_POSITIVE_NUMBERS = "^0\$|^[1-9]\\d*\$"
 const val REGEX_NEGATIVE_NUMBERS = "^-[1-9]\\d*\$"
 
-const val REGEX_PAK_LL_NUMBER = "^0\\d{2}[- ]?\\d{7}\$|^\\d{7}\$"
+const val REGEX_PAK_LL_NUMBER = "^0\\d{2}[- ]?\\d{7}\$|^\\d{10}\$"
 const val REGEX_PAK_CELL_NUMBER = "^((\\+92)|(0092))[- ]?3\\d{2}[- ]?\\d{7}\$|^03\\d{2}[- ]?\\d{7}\$"
 
 const val REGEX_PAK_CNIC = "^\\d{5}[- ]?\\d{7}[- ]?\\d\$"
 const val REGEX_PAK_NTN = "^\\d{7}[- ]?\\d\$"
+const val REGEX_PAK_STN = "^\\d{2}[- ]?\\d{2}[- ]?\\d{4}[- ]?\\d{3}[- ]?\\d{2}[- ]?\$"
 
 const val REGEX_IBAN = "^[a-zA-Z]{2}\\d{2} ?[a-zA-Z]{4} ?\\d{4} ?\\d{4} ?\\d{4} ?\\d{4}\$"
 

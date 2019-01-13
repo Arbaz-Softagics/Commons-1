@@ -1,4 +1,4 @@
-@file:JvmName("NotificationDialog")
+@file:JvmName("Dialog")
 package com.arbazmateen.dialogs
 
 import android.content.Context

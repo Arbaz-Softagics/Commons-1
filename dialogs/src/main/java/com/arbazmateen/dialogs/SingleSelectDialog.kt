@@ -72,24 +72,19 @@ class SingleSelectDialog<T>(private val activity: Activity, private val items: L
         closeButtonText = closeButton
     }
 
-    class Builder<T>(activity: Activity, items: List<T>) {
+    class Builder<T>(activity: Activity) {
 
+        private var items: List<T> = listOf()
         private val singleSelectListDialog = SingleSelectDialog(activity, items)
 
-        fun setTitle(title: String): Builder<T> {
-            singleSelectListDialog.setTitle(title)
-            return this
-        }
+        fun setTitle(title: String) = apply { singleSelectListDialog.setTitle(title) }
 
-        fun setCloseButtonText(closeButton: String): Builder<T> {
-            singleSelectListDialog.setCloseButtonText(closeButton)
-            return this
-        }
+        fun setItems(items: List<T>) = apply { this.items = items }
 
-        fun setItemClickListener(singleItemListener: ((item: T, data: String, position: Int) -> Unit)): Builder<T> {
-            singleSelectListDialog.setItemClickListener(singleItemListener)
-            return this
-        }
+        fun setCloseButtonText(closeButton: String) = apply { singleSelectListDialog.setCloseButtonText(closeButton) }
+
+        fun setItemClickListener(singleItemListener: ((item: T, data: String, position: Int) -> Unit)) =
+                apply { singleSelectListDialog.setItemClickListener(singleItemListener) }
 
         fun build(): SingleSelectDialog<T> {
             return singleSelectListDialog

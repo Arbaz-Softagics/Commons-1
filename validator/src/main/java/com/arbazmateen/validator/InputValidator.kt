@@ -137,46 +137,46 @@ class InputValidator(val text: String) {
                      allowDot: Boolean = false,
                      allowUnderscore: Boolean = false): InputValidator {
         if (isOptional()) return this
-        var error = "Invalid name:\n Only characters allowed"
+        var error = "Invalid input:\n Only characters allowed"
         val regex = when {
             allowNumbers -> {
                 when {
                     allowSpace && allowHyphen && allowDot && allowUnderscore -> {
-                        error = "Invalid name:\n Only numbers, characters,\n Space, (-), (.) & (_) allowed"
+                        error = "Invalid input:\n Only numbers, characters,\n Space, (-), (.) & (_) allowed"
                         REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT__
                     }
                     allowSpace && allowHyphen && allowDot -> {
-                        error = "Invalid name:\n Only numbers, characters,\n Space, (-) & (.) allowed"
+                        error = "Invalid input:\n Only numbers, characters,\n Space, (-) & (.) allowed"
                         REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT
                     }
                     allowSpace && allowHyphen -> {
-                        error = "Invalid name:\n Only numbers, characters,\n Space & (-) allowed"
+                        error = "Invalid input:\n Only numbers, characters,\n Space & (-) allowed"
                         REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN
                     }
                     allowSpace -> {
-                        error = "Invalid name:\n Only numbers, characters & Space allowed"
+                        error = "Invalid input:\n Only numbers, characters & Space allowed"
                         REGEX_ALPHA_NUMERIC_W_SPACE
                     }
                     else -> {
-                        error = "Invalid name:\n Only numbers & characters allowed"
+                        error = "Invalid input:\n Only numbers & characters allowed"
                         REGEX_ALPHA_NUMERIC
                     }
                 }
             }
             allowSpace && allowHyphen && allowDot && allowUnderscore -> {
-                error = "Invalid name:\n Only characters, Space,\n (-), (.) & (_) allowed"
+                error = "Invalid input:\n Only characters, Space,\n (-), (.) & (_) allowed"
                 REGEX_CHARACTERS_W_SPACE_HYPHEN_DOT__
             }
             allowSpace && allowHyphen && allowDot -> {
-                error = "Invalid name:\n Only characters, Space,\n (-) & (.) allowed"
+                error = "Invalid input:\n Only characters, Space,\n (-) & (.) allowed"
                 REGEX_CHARACTERS_W_SPACE_HYPHEN_DOT
             }
             allowSpace && allowHyphen -> {
-                error = "Invalid name:\n Only characters, Space & (-) allowed"
+                error = "Invalid input:\n Only characters, Space & (-) allowed"
                 REGEX_CHARACTERS_W_SPACE_HYPHEN
             }
             allowSpace -> {
-                error = "Invalid name:\n Only characters & Space allowed"
+                error = "Invalid input:\n Only characters & Space allowed"
                 REGEX_CHARACTERS_W_SPACE
             }
             else -> {
@@ -189,11 +189,15 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateNumbers(allowNegative: Boolean = false): InputValidator {
+    fun validateNumbers(allowNegative: Boolean = false, minValue: Int = Int.MIN_VALUE, maxValue: Int = Int.MAX_VALUE): InputValidator {
         if (isOptional()) return this
-        val regex = if (allowNegative) REGEX_NEGATIVE_NUMBERS else REGEX_NUMBERS
+        val regex = if (allowNegative) REGEX_NUMBERS else REGEX_POSITIVE_NUMBERS
         if(!text.matches(Regex(regex))) {
             setErrorMessage("Only numbers allowed")
+        } else if(text.toInt() < minValue) {
+            setErrorMessage("Minimum value allowed: $minValue")
+        } else if(text.toInt() > maxValue) {
+            setErrorMessage("Maximum value allowed: $maxValue")
         }
         return this
     }

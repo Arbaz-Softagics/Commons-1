@@ -13,6 +13,14 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 6. [How to use](#How-to-use-dialogs)
 7. [Calling From Java](#Calling-from-Java)
 
+<p align="center">
+	<img src="http://arbazmateen.com/git_commons/info.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/warning.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/error.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/delete.jpg" width="240">
+	<img src="http://arbazmateen.com/git_commons/wait.jpg" width="240">
+</p>
+
 ### Information Dialog
 ```kotlin
 	infoDialog(
@@ -127,7 +135,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 #### add this line to app `build.gradle` file
 ```gradle
 	dependencies {
-	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.1'
+	        implementation 'com.github.ArbazMateen.Commons:dialogs:0.1.2'
 	}
 ```
 

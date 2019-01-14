@@ -141,7 +141,7 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 
 ### Calling from Java
 ```java
-	NotificationDialog.infoDialog(
+	Dialog.infoDialog(
                 this,
                 "Some informational message"
         ).setPositiveButton("", new DialogInterface.OnClickListener() {

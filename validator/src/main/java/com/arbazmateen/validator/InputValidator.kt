@@ -189,9 +189,11 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateNumbers(allowNegative: Boolean = false, minValue: Int = Int.MIN_VALUE, maxValue: Int = Int.MAX_VALUE): InputValidator {
+    fun validateNumbers(allowNegative: Boolean = false,
+                        minValue: Int = Int.MIN_VALUE,
+                        maxValue: Int = Int.MAX_VALUE): InputValidator {
         if (isOptional()) return this
-        val regex = if (allowNegative) REGEX_NUMBERS else REGEX_POSITIVE_NUMBERS
+        val regex = if (allowNegative) REGEX_ANY_NUMBER else REGEX_ANY_POSITIVE_NUMBER
         if(!text.matches(Regex(regex))) {
             setErrorMessage("Only numbers allowed")
         } else if(text.toInt() < minValue) {
@@ -211,19 +213,19 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun minimumLength(length: Int): InputValidator {
+    fun minimumLength(length: Int, showError: Boolean = false): InputValidator {
         minimumLength = length
         if (isOptional()) return this
         if (text.length < minimumLength) {
-            setErrorMessage("Minimum length required: $minimumLength")
+            if (showError) setErrorMessage("Minimum length required: $minimumLength")
         }
         return this
     }
 
-    fun maximumLength(length: Int): InputValidator {
+    fun maximumLength(length: Int, showError: Boolean = false): InputValidator {
         maximumLength = length
         if (text.length > maximumLength) {
-            setErrorMessage("Maximum length allowed: $maximumLength")
+            if (showError) setErrorMessage("Maximum length allowed: $maximumLength")
         }
         return this
     }

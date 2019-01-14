@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 /**************************************************************************
@@ -96,4 +97,12 @@ fun String.check(with: String, back: String): String {
         return back
     }
     return ""
+}
+
+fun String.toDecimal(): BigDecimal {
+    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        this.toBigDecimal()
+    } else {
+        "0".toBigDecimal()
+    }
 }

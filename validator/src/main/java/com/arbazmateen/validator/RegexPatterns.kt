@@ -33,6 +33,8 @@ const val REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN = "^[a-zA-Z0-9 -]+\$"
 const val REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT = "^[a-zA-Z0-9 -.]+\$"
 const val REGEX_ALPHA_NUMERIC_W_SPACE_HYPHEN_DOT__ = "^[a-zA-Z0-9 -._]+\$"
 
+const val REGEX_ANY_NUMBER = "^-?\\d+(\\.\\d+)?\$"
+const val REGEX_ANY_POSITIVE_NUMBER = "^\\d+(\\.\\d+)?\$"
 const val REGEX_NUMBERS = "^-?[1-9]+[0-9]*\$|^[0-9]+\$"
 const val REGEX_POSITIVE_NUMBERS = "^0\$|^[1-9]\\d*\$"
 const val REGEX_NEGATIVE_NUMBERS = "^-[1-9]\\d*\$"
@@ -57,3 +59,15 @@ const val REGEX_POSITIVE_TWO_FLOATING_POINT =
 
 const val REGEX_POSITIVE_THREE_FLOATING_POINT =
     "^0\$|^0\\.([1-9][0-9][0-9]|[0-9][1-9][0-9]|[0-9][0-9][1-9])\$|^[1-9]*[0-9]*(\\.[0-9]{0,3})?\$"
+
+object Allow {
+    const val NUMBERS = "0-9"
+    const val UPPERCASE = "A-Z"
+    const val LOWERCASE = "a-z"
+    const val SPACE = " "
+    const val HYPHEN = "-"
+    const val UNDERSCORE = "_"
+    const val DOT = "."
+    const val AT = "@"
+    const val SPECIAL_CHARS = "`~!@#\$%\\^&*()_\\-+={\\[}\\]|\\\\:;\"'<,>.?/"
+}

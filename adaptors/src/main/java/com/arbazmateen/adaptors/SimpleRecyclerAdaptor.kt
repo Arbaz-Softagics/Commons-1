@@ -91,6 +91,16 @@ class SimpleRecyclerAdaptor<T> private constructor(
         notifyItemRangeInserted(dataList.size - 1, list.size)
     }
 
+    fun addItem(item: T) {
+        dataList.add(item)
+        notifyItemInserted(dataList.size - 1)
+    }
+
+    fun addItem(position: Int, item: T) {
+        dataList.add(position, item)
+        notifyItemInserted(position)
+    }
+
     fun removeItemAtPosition(position: Int) {
         dataList.removeAt(position)
         notifyItemRemoved(position)

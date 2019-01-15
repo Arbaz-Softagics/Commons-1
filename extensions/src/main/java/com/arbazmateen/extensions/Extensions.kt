@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.text.DecimalFormat
 
 /**************************************************************************
@@ -67,6 +68,14 @@ fun Long.format(): String {
 
 fun Int.format(): String {
     return DecimalFormat("#,###").format(this) ?: "0"
+}
+
+fun BigInteger.format(): String {
+    return DecimalFormat("#,###").format(this) ?: "0"
+}
+
+fun BigDecimal.format(): String {
+    return DecimalFormat("#,###.00").format(this) ?: "0.00"
 }
 
 /**************************************************************************

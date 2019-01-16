@@ -33,25 +33,25 @@ fun Fragment.hideKeyboard(context: Context, view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Fragment.getIntValue(key: String): Int {
+fun Fragment.getIntValue(key: String, default: Int = 0): Int {
     if(arguments != null) {
-        return arguments?.getInt(key, 0) ?: 0
+        return arguments?.getInt(key, default) ?: default
     }
-    return 0
+    return default
 }
 
-fun Fragment.getLongValue(key: String): Long {
+fun Fragment.getLongValue(key: String, default: Long = 0L): Long {
     if(arguments != null) {
-        return arguments?.getLong(key, 0L) ?: 0L
+        return arguments?.getLong(key, default) ?: default
     }
-    return 0L
+    return default
 }
 
-fun Fragment.getStringValue(key: String): String {
+fun Fragment.getStringValue(key: String, default: String = ""): String {
     if(arguments != null) {
-        return arguments?.getString(key, "") ?: ""
+        return arguments?.getString(key, default) ?: default
     }
-    return ""
+    return default
 }
 
 inline fun <reified T : Serializable> Fragment.getSerializable(key: String): T? {

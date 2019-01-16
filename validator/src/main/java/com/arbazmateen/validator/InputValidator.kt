@@ -189,13 +189,22 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateNumbers(allowNegative: Boolean = false,
-                        minValue: Int = Int.MIN_VALUE,
-                        maxValue: Int = Int.MAX_VALUE): InputValidator {
+    fun validateNumbers(allowNegative: Boolean = false): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_ANY_NUMBER else REGEX_ANY_POSITIVE_NUMBER
         if(!text.matches(Regex(regex))) {
-            setErrorMessage("Only numbers allowed")
+            setErrorMessage("Only valid numbers allowed")
+        }
+        return this
+    }
+
+    fun validateIntegers(allowNegative: Boolean = false,
+                        minValue: Int = Int.MIN_VALUE,
+                        maxValue: Int = Int.MAX_VALUE): InputValidator {
+        if (isOptional()) return this
+        val regex = if (allowNegative) REGEX_INTEGERS else REGEX_POSITIVE_INTEGERS
+        if(!text.matches(Regex(regex))) {
+            setErrorMessage("Only integers allowed")
         } else if(text.toInt() < minValue) {
             setErrorMessage("Minimum value allowed: $minValue")
         } else if(text.toInt() > maxValue) {
@@ -204,11 +213,20 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateFloatingPointNumbers(allowNegative: Boolean = false): InputValidator {
+    fun validate2Decimals(allowNegative: Boolean = false): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_TWO_FLOATING_POINT else REGEX_POSITIVE_TWO_FLOATING_POINT
         if(!text.matches(Regex(regex))) {
-            setErrorMessage("Only floating point numbers with 2 decimal allowed")
+            setErrorMessage("Only number with 2 decimals allowed")
+        }
+        return this
+    }
+
+    fun validate3Decimals(allowNegative: Boolean = false): InputValidator {
+        if (isOptional()) return this
+        val regex = if (allowNegative) REGEX_THREE_FLOATING_POINT else REGEX_POSITIVE_THREE_FLOATING_POINT
+        if(!text.matches(Regex(regex))) {
+            setErrorMessage("Only number with 3 decimals allowed")
         }
         return this
     }

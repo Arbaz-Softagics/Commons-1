@@ -31,25 +31,25 @@ fun Activity.hideKeyboard(view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Activity.getIntValue(key: String): Int {
+fun Activity.getIntValue(key: String, default: Int = 0): Int {
     if(intent != null && intent.extras != null) {
-        return intent.extras?.getInt(key) ?: 0
+        return intent.extras?.getInt(key) ?: default
     }
-    return 0
+    return default
 }
 
-fun Activity.getLongValue(key: String): Long {
+fun Activity.getLongValue(key: String, default: Long = 0L): Long {
     if(intent != null && intent.extras != null) {
-        return intent.extras?.getLong(key) ?: 0L
+        return intent.extras?.getLong(key) ?: default
     }
-    return 0L
+    return default
 }
 
-fun Activity.getStringValue(key: String): String {
+fun Activity.getStringValue(key: String, default: String = ""): String {
     if(intent != null && intent.extras != null) {
-        return intent.extras?.getString(key) ?: ""
+        return intent.extras?.getString(key) ?: default
     }
-    return ""
+    return default
 }
 
 inline fun <reified T : Serializable> Activity.getSerializable(key: String): T? {

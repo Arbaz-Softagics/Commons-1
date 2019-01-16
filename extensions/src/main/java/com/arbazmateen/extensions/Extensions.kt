@@ -55,11 +55,27 @@ fun EditText.textCapitalize(): String {
 ** Numbers Extensions
 **************************************************************************/
 fun Float.format(): String {
-    return DecimalFormat("#,###.00").format(this.toDouble()) ?: "0.00"
+    val value = DecimalFormat("#,###.###").format(this.toDouble()) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Float.formatNoComma(): String {
+    val value = DecimalFormat("#.###").format(this.toDouble()) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
 }
 
 fun Double.format(): String {
-    return DecimalFormat("#,###.00").format(this) ?: "0.00"
+    val value = DecimalFormat("#,###.##").format(this) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Double.formatNoComma(): String {
+    val value = DecimalFormat("#.###").format(this) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
 }
 
 fun Long.format(): String {
@@ -75,7 +91,15 @@ fun BigInteger.format(): String {
 }
 
 fun BigDecimal.format(): String {
-    return DecimalFormat("#,###.00").format(this) ?: "0.00"
+    val value = DecimalFormat("#,###.##").format(this) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun BigDecimal.formatNoComma(): String {
+    val value = DecimalFormat("#.##").format(this) ?: "0.0"
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
 }
 
 /**************************************************************************

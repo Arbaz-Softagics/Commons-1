@@ -22,7 +22,7 @@ class SingleSelectDialog<T>(private val activity: Activity, private val items: L
     fun show() {
         val alertDialogBuilder = AlertDialog.Builder(activity)
 
-        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_list_view_layout, null)
+        val dialogView = activity.layoutInflater.inflate(R.layout.dialog_single_select_view, null)
 
         val rippleViewClose = dialogView.findViewById(R.id.close) as TextView
         val titleView = dialogView.findViewById(R.id.spinnerTitle) as TextView

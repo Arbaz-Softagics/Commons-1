@@ -54,26 +54,34 @@ fun EditText.textCapitalize(): String {
 /**************************************************************************
 ** Numbers Extensions
 **************************************************************************/
-fun Float.format(): String {
-    val value = DecimalFormat("#,###.###").format(this.toDouble()) ?: "0.0"
+fun Float.format(precisionCount: Int = 2): String {
+    var per = ""
+    (1..precisionCount).forEach { per += "#" }
+    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Float.formatNoComma(): String {
-    val value = DecimalFormat("#.###").format(this.toDouble()) ?: "0.0"
+fun Float.formatNoComma(precisionCount: Int = 2): String {
+    var per = ""
+    (1..precisionCount).forEach { per += "#" }
+    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Double.format(): String {
-    val value = DecimalFormat("#,###.##").format(this) ?: "0.0"
+fun Double.format(precisionCount: Int = 2): String {
+    var per = ""
+    (1..precisionCount).forEach { per += "#" }
+    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Double.formatNoComma(): String {
-    val value = DecimalFormat("#.###").format(this) ?: "0.0"
+fun Double.formatNoComma(precisionCount: Int = 2): String {
+    var per = ""
+    (1..precisionCount).forEach { per += "#" }
+    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
@@ -96,8 +104,10 @@ fun BigDecimal.format(): String {
     return value
 }
 
-fun BigDecimal.formatNoComma(): String {
-    val value = DecimalFormat("#.##").format(this) ?: "0.0"
+fun BigDecimal.formatNoComma(precisionCount: Int = 2): String {
+    var per = ""
+    (1..precisionCount).forEach { per += "#" }
+    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }

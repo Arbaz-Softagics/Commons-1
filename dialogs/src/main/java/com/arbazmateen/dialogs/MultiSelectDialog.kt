@@ -116,6 +116,8 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
     private var preSelectedIds = mutableListOf<Long>()
     private var selectedItems = mutableListOf<T>()
 
+    private lateinit var adaptor: MultiSelectAdaptor<T>
+
     private var title: String = "Multi Selection"
     private var positiveButtonText: String = "DONE"
     private var negativeButtonText: String = "CLOSE"
@@ -188,6 +190,10 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
             }
         }
 
+        checkSelectedItems()
+        adaptor = MultiSelectAdaptor(mContext, mainDataList)
+        recyclerView.adapter = adaptor
+
         return dialog
     }
 
@@ -245,6 +251,15 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
             R.id.select_all_container -> {
 
             }
+        }
+    }
+
+    private fun checkSelectedItems() {
+        preSelectedIds.sort()
+        mainDataList.forEach { item ->
+            item.isSelected = false
+            val (_, find) = findIn(preSelectedIds, 0, preSelectedIds.size - 1, item.id)
+            if(find) item.isSelected = true
         }
     }
 

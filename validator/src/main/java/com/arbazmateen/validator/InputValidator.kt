@@ -86,7 +86,7 @@ class InputValidator(val text: String) {
     }
 
     fun optionalIf(condition: Boolean): InputValidator {
-        return if(condition) {
+        return if (condition) {
             optional()
         } else {
             this
@@ -94,7 +94,7 @@ class InputValidator(val text: String) {
     }
 
     fun optionalElseRequiredIf(condition: Boolean): InputValidator {
-        return if(condition) {
+        return if (condition) {
             optional()
         } else {
             required()
@@ -129,10 +129,12 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateName(allowSpace: Boolean = false,
-                     allowHyphen: Boolean = false,
-                     allowDot: Boolean = false,
-                     allowUnderscore: Boolean = false): InputValidator {
+    fun validateName(
+        allowSpace: Boolean = false,
+        allowHyphen: Boolean = false,
+        allowDot: Boolean = false,
+        allowUnderscore: Boolean = false
+    ): InputValidator {
         if (isOptional()) return this
         var error = "Invalid name:\n Only characters allowed"
         val regex = when {
@@ -162,11 +164,13 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun validateText(allowNumbers: Boolean = false,
-                     allowSpace: Boolean = false,
-                     allowHyphen: Boolean = false,
-                     allowDot: Boolean = false,
-                     allowUnderscore: Boolean = false): InputValidator {
+    fun validateText(
+        allowNumbers: Boolean = false,
+        allowSpace: Boolean = false,
+        allowHyphen: Boolean = false,
+        allowDot: Boolean = false,
+        allowUnderscore: Boolean = false
+    ): InputValidator {
         if (isOptional()) return this
         var error = "Invalid input:\n Only characters allowed"
         val regex = when {
@@ -223,37 +227,41 @@ class InputValidator(val text: String) {
     fun validateNumbers(allowNegative: Boolean = false): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_ANY_NUMBER else REGEX_ANY_POSITIVE_NUMBER
-        if(!text.matches(Regex(regex))) {
+        if (!text.matches(Regex(regex))) {
             setErrorMessage("Only valid numbers allowed")
         }
         return this
     }
 
-    fun validateIntegers(allowNegative: Boolean = false,
-                        minValue: Int = Int.MIN_VALUE,
-                        maxValue: Int = Int.MAX_VALUE): InputValidator {
+    fun validateIntegers(
+        allowNegative: Boolean = false,
+        minValue: Int = Int.MIN_VALUE,
+        maxValue: Int = Int.MAX_VALUE
+    ): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_INTEGERS else REGEX_POSITIVE_INTEGERS
-        if(!text.matches(Regex(regex))) {
+        if (!text.matches(Regex(regex))) {
             setErrorMessage("Only integers allowed")
-        } else if(text.toInt() < minValue) {
+        } else if (text.toInt() < minValue) {
             setErrorMessage("Minimum value allowed: $minValue")
-        } else if(text.toInt() > maxValue) {
+        } else if (text.toInt() > maxValue) {
             setErrorMessage("Maximum value allowed: $maxValue")
         }
         return this
     }
 
-    fun validateDecimals(allowNegative: Boolean = false,
-                         minValue: Double = Double.MIN_VALUE,
-                         maxValue: Double = Double.MAX_VALUE): InputValidator {
+    fun validateDecimals(
+        allowNegative: Boolean = false,
+        minValue: Double = Double.MIN_VALUE,
+        maxValue: Double = Double.MAX_VALUE
+    ): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_ANY_NUMBER else REGEX_ANY_POSITIVE_NUMBER
-        if(!text.matches(Regex(regex))) {
+        if (!text.matches(Regex(regex))) {
             setErrorMessage("Only numbers allowed")
-        } else if(text.toDouble() < minValue) {
+        } else if (text.toDouble() < minValue) {
             setErrorMessage("Minimum value allowed: $minValue")
-        } else if(text.toDouble() > maxValue) {
+        } else if (text.toDouble() > maxValue) {
             setErrorMessage("Maximum value allowed: $maxValue")
         }
         return this
@@ -262,7 +270,7 @@ class InputValidator(val text: String) {
     fun validate2Decimals(allowNegative: Boolean = false): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_TWO_FLOATING_POINT else REGEX_POSITIVE_TWO_FLOATING_POINT
-        if(!text.matches(Regex(regex))) {
+        if (!text.matches(Regex(regex))) {
             setErrorMessage("Only number with 2 decimals allowed")
         }
         return this
@@ -271,7 +279,7 @@ class InputValidator(val text: String) {
     fun validate3Decimals(allowNegative: Boolean = false): InputValidator {
         if (isOptional()) return this
         val regex = if (allowNegative) REGEX_THREE_FLOATING_POINT else REGEX_POSITIVE_THREE_FLOATING_POINT
-        if(!text.matches(Regex(regex))) {
+        if (!text.matches(Regex(regex))) {
             setErrorMessage("Only number with 3 decimals allowed")
         }
         return this

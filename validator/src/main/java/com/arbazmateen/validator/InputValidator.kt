@@ -2,17 +2,18 @@ package com.arbazmateen.validator
 
 import android.util.Patterns
 import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 
 /**************************************************************************
  ** Extension functions
  **************************************************************************/
-fun EditText.validator() = InputValidator(this.text.toString().trim())
+fun EditText.validator(layout: TextInputLayout? = null) = InputValidator(this.text.toString().trim(), layout)
 
 /**************************************************************************
  ** Edit text validator class
  **************************************************************************/
 
-class InputValidator(val text: String) {
+class InputValidator(val text: String, var textInputLayout: TextInputLayout? = null) {
 
     private var isValid = true
     private var isOptional = false
@@ -27,11 +28,12 @@ class InputValidator(val text: String) {
 
     fun validate(): Boolean {
         if (isValid) {
+            textInputLayout?.isErrorEnabled = false
             validListener?.invoke()
         } else {
+            textInputLayout?.error = errorMessage
             invalidListener?.invoke(errorMessage)
         }
-
         return isValid
     }
 

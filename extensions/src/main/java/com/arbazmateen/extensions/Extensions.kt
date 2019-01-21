@@ -2,6 +2,7 @@ package com.arbazmateen.extensions
 
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -148,4 +149,23 @@ fun String.toDecimal(): BigDecimal {
     } else {
         "0".toBigDecimal()
     }
+}
+
+/**************************************************************************
+** View Extensions
+**************************************************************************/
+fun View.hide(condition: Boolean = true) {
+    if(condition) this.visibility = View.GONE
+}
+
+fun View.Show(condition: Boolean = true) {
+    if(condition) this.visibility = View.VISIBLE
+}
+
+fun View.enable(condition: Boolean = true) {
+    if(condition) this.isEnabled = true
+}
+
+fun View.disable(condition: Boolean = true) {
+    if(condition) this.isEnabled = false
 }

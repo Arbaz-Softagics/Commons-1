@@ -19,17 +19,17 @@ import java.io.Serializable
 ** Model
 **************************************************************************/
 abstract class MultiSelectModel(open var id: Long,
-                                open var displayName: String,
+                                open var displayText: String,
                                 open var isSelected: Boolean = false): Serializable, Parcelable
 
 /**************************************************************************
 ** Multi Select Adaptor
 **************************************************************************/
-class MultiSelectAdaptor<T : MultiSelectModel>(val context: Context, private val dataList: MutableList<T>):
+class MultiSelectAdaptor<T : MultiSelectModel>(val context: Context, private var dataList: MutableList<T>):
     RecyclerView.Adapter<MultiSelectAdaptor<T>.ViewHolder>() {
 
-    val selectedIdsList = mutableListOf<Long>()
-    val selectedItemsList = mutableListOf<T>()
+    var selectedIdsList = mutableListOf<Long>()
+    var selectedItemsList = mutableListOf<T>()
     private var mOnDataBindListener: ((textView: TextView, item: T, position: Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +40,11 @@ class MultiSelectAdaptor<T : MultiSelectModel>(val context: Context, private val
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(dataList[position], position)
+    }
+
+    fun changeData(list: MutableList<T>) {
+        this.dataList = list
+        notifyDataSetChanged()
     }
 
     fun setDataBindListener(onDataBindListener: (textView: TextView, item: T, position: Int) -> Unit) =
@@ -192,6 +197,7 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
 
         checkSelectedItems()
         adaptor = MultiSelectAdaptor(mContext, mainDataList)
+        adaptor.selectedIdsList = preSelectedIds
         recyclerView.adapter = adaptor
 
         return dialog
@@ -249,7 +255,13 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
                 }
             }
             R.id.select_all_container -> {
-
+                if(selectAllCheckBox.isChecked) {
+                    selectAllCheckBox.isChecked = false
+                    selectAllTextView.text = "SELECT ALL"
+                } else {
+                    selectAllCheckBox.isChecked = true
+                    selectAllTextView.text = "DESELECT ALL"
+                }
             }
         }
     }

@@ -49,7 +49,23 @@ class InputValidator(val text: String) {
         return this
     }
 
-    fun allow(regex: String, error: String = "Invalid input"): InputValidator {
+    fun requiredIf(condition: Boolean): InputValidator {
+        return if (condition) {
+            required()
+        } else {
+            this
+        }
+    }
+
+    fun requiredElseOptionalIf(condition: Boolean): InputValidator {
+        return if (condition) {
+            required()
+        } else {
+            optional()
+        }
+    }
+
+    fun allowOnly(regex: String, error: String = "Invalid input"): InputValidator {
         if (isOptional()) return this
         if (!text.matches(Regex(regex))) {
             setErrorMessage(error)
@@ -64,10 +80,25 @@ class InputValidator(val text: String) {
     }
 
     fun optional(regex: String): InputValidator {
-        isOptional = true
-        minimumLength = 0
-        allow(regex)
+        optional()
+        allowOnly(regex)
         return this
+    }
+
+    fun optionalIf(condition: Boolean): InputValidator {
+        return if(condition) {
+            optional()
+        } else {
+            this
+        }
+    }
+
+    fun optionalElseRequiredIf(condition: Boolean): InputValidator {
+        return if(condition) {
+            optional()
+        } else {
+            required()
+        }
     }
 
     fun validateEmail(builtInCheck: Boolean = false): InputValidator {
@@ -208,6 +239,21 @@ class InputValidator(val text: String) {
         } else if(text.toInt() < minValue) {
             setErrorMessage("Minimum value allowed: $minValue")
         } else if(text.toInt() > maxValue) {
+            setErrorMessage("Maximum value allowed: $maxValue")
+        }
+        return this
+    }
+
+    fun validateDecimals(allowNegative: Boolean = false,
+                         minValue: Double = Double.MIN_VALUE,
+                         maxValue: Double = Double.MAX_VALUE): InputValidator {
+        if (isOptional()) return this
+        val regex = if (allowNegative) REGEX_ANY_NUMBER else REGEX_ANY_POSITIVE_NUMBER
+        if(!text.matches(Regex(regex))) {
+            setErrorMessage("Only numbers allowed")
+        } else if(text.toDouble() < minValue) {
+            setErrorMessage("Minimum value allowed: $minValue")
+        } else if(text.toDouble() > maxValue) {
             setErrorMessage("Maximum value allowed: $maxValue")
         }
         return this

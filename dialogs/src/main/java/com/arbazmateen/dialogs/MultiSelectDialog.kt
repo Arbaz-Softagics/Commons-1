@@ -198,6 +198,7 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         checkSelectedItems()
         adaptor = MultiSelectAdaptor(mContext, mainDataList)
         adaptor.selectedIdsList = preSelectedIds
+        adaptor.selectedItemsList = selectedItems
         recyclerView.adapter = adaptor
 
         return dialog
@@ -241,11 +242,11 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         when(view?.id) {
             R.id.done -> {
                 if(onSubmitClickListener != null) {
-                    onSubmitClickListener?.invoke(preSelectedIds, selectedItems,
-                        selectedItems.toString().replace("[", "").replace("]", ""))
+                    onSubmitClickListener?.invoke(adaptor.selectedIdsList, adaptor.selectedItemsList,
+                        adaptor.selectedItemsList.toString()
+                            .replace("[", "").replace("]", ""))
 
-
-//                    dismiss()
+                    dismiss()
                 }
             }
             R.id.cancel -> {
@@ -258,9 +259,11 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
                 if(selectAllCheckBox.isChecked) {
                     selectAllCheckBox.isChecked = false
                     selectAllTextView.text = "SELECT ALL"
+                    deSelectAll()
                 } else {
                     selectAllCheckBox.isChecked = true
                     selectAllTextView.text = "DESELECT ALL"
+                    selectAll()
                 }
             }
         }
@@ -268,14 +271,38 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
 
     private fun checkSelectedItems() {
         preSelectedIds.sort()
+        selectedItems.clear()
         mainDataList.forEach { item ->
             item.isSelected = false
             val (_, find) = findIn(preSelectedIds, 0, preSelectedIds.size - 1, item.id)
-            if(find) item.isSelected = true
+            if(find) {
+                item.isSelected = true
+                selectedItems.add(item)
+            }
         }
     }
 
-    class Builder<T : MultiSelectModel>(val context: Context) {
+    private fun selectAll() {
+        preSelectedIds.clear()
+        selectedItems.clear()
+        mainDataList.forEach { item ->
+            item.isSelected = true
+            preSelectedIds.add(item.id)
+            selectedItems.add(item)
+        }
+        adaptor.changeData(mainDataList)
+    }
+
+    private fun deSelectAll() {
+        preSelectedIds.clear()
+        selectedItems.clear()
+        mainDataList.forEach { item ->
+            item.isSelected = false
+        }
+        adaptor.changeData(mainDataList)
+    }
+
+    class Builder<T : MultiSelectModel>(private val context: Context) {
 
         private var title = "Select"
         private var positiveButtonText = "DONE"

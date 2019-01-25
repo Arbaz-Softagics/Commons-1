@@ -42,73 +42,73 @@ fun Any.toastShort(context: Context, text: String) {
 }
 
 /**************************************************************************
-** Edittext Extensions
+** EditText Extensions
 **************************************************************************/
-fun EditText.text(): String {
-    return if (this.text.trim().isNotBlank()) this.text.trim().toString() else ""
+fun EditText.text(default: String = ""): String {
+    return if (this.text.trim().isNotBlank()) this.text.trim().toString() else default
 }
 
-fun EditText.textCapitalize(): String {
-    return this.text().capitalize()
+fun EditText.textCapitalize(default: String = ""): String {
+    return this.text(default).capitalize()
 }
 
 /**************************************************************************
 ** Numbers Extensions
 **************************************************************************/
-fun Float.format(precisionCount: Int = 2): String {
+fun Float.format(precisionCount: Int = 2, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
+    val value = DecimalFormat("#.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Float.formatNoComma(precisionCount: Int = 2): String {
+fun Float.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
+    val value = DecimalFormat("#.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Double.format(precisionCount: Int = 2): String {
+fun Double.format(precisionCount: Int = 2, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
+    val value = DecimalFormat("#.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Double.formatNoComma(precisionCount: Int = 2): String {
+fun Double.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
+    val value = DecimalFormat("#.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun Long.format(): String {
-    return DecimalFormat("#,###").format(this) ?: "0"
+fun Long.format(default: String = "0"): String {
+    return DecimalFormat("#,###").format(this) ?: default
 }
 
-fun Int.format(): String {
-    return DecimalFormat("#,###").format(this) ?: "0"
+fun Int.format(default: String = "0"): String {
+    return DecimalFormat("#,###").format(this) ?: default
 }
 
-fun BigInteger.format(): String {
-    return DecimalFormat("#,###").format(this) ?: "0"
+fun BigInteger.format(default: String = "0"): String {
+    return DecimalFormat("#,###").format(this) ?: default
 }
 
-fun BigDecimal.format(): String {
-    val value = DecimalFormat("#,###.##").format(this) ?: "0.0"
+fun BigDecimal.format(default: String = "0"): String {
+    val value = DecimalFormat("#,###.##").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun BigDecimal.formatNoComma(precisionCount: Int = 2): String {
+fun BigDecimal.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: "0.0"
+    val value = DecimalFormat("#.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
@@ -136,18 +136,18 @@ inline fun String.check(with: String, function: () -> String): String {
     return ""
 }
 
-fun String.check(with: String, back: String): String {
+fun String.check(with: String, back: String, default: String = ""): String {
     if (this == with) {
         return back
     }
-    return ""
+    return default
 }
 
-fun String.toDecimal(): BigDecimal {
+fun String.toDecimal(default: String = "0"): BigDecimal {
     return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toBigDecimal()
     } else {
-        "0".toBigDecimal()
+        default.toBigDecimal()
     }
 }
 
@@ -158,7 +158,7 @@ fun View.hide(condition: Boolean = true) {
     if(condition) this.visibility = View.GONE
 }
 
-fun View.Show(condition: Boolean = true) {
+fun View.show(condition: Boolean = true) {
     if(condition) this.visibility = View.VISIBLE
 }
 

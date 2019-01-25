@@ -17,6 +17,16 @@ interface OnDataBindListener<T> {
 }
 
 @FunctionalInterface
+interface OnMultiViewDataBindListener<T> {
+    fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>)
+}
+
+@FunctionalInterface
+interface BindItemViewType<T> {
+    fun bindItemViewType(item: T): Int
+}
+
+@FunctionalInterface
 interface OnItemClickListener<T> {
     fun onItemClick(item: T, position: Int)
 }
@@ -48,37 +58,78 @@ object Orientation {
 
 class SimpleRecyclerAdaptor<T> private constructor(
     private val context: Context,
-    private var dataList: MutableList<T>,
-    private var layout: Int,
-    private var viewsList: MutableList<Int> = mutableListOf(),
-    private var clickableItem: Boolean = false,
-    private var longClickableItem: Boolean = false,
-    private var hasOptionMenu: Boolean = false,
-    private var optionMenu: Int = 0,
-    private var optionMenuViewId: Int = 0
+    private var dataList: MutableList<T>
 ) : RecyclerView.Adapter<SimpleRecyclerAdaptor<T>.ViewHolder>() {
 
     private var onDataBindListener: OnDataBindListener<T>? = null
+    private var onMultiViewDataBindListener: OnMultiViewDataBindListener<T>? = null
+    private var bindItemViewType: BindItemViewType<T>? = null
     private var onItemClickListener: OnItemClickListener<T>? = null
     private var onItemLongClickListener: OnItemLongClickListener<T>? = null
     private var onOptionMenuClickListener: OnOptionMenuClickListener<T>? = null
     private var onItemChildClickListener: OnItemChildClickListener<T>? = null
 
     private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
+    private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
+    private var mBindItemViewType: ((item: T) -> Int)? = null
     private var mOnItemClickListener: ((item: T, position: Int) -> Unit)? = null
     private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
     private var mOnOptionMenuClickListener: ((popUpMenu: PopupMenu, item: T, position: Int) -> Unit)? = null
     private var mOnItemChildClickListener: ((item: T, position: Int, view: View) -> Unit)? = null
 
+    private var layout: Int = -1
+    private var viewsList: MutableList<Int> = mutableListOf()
+
+    private var layouts: Map<Int, Int>? = null
+    private var mapViewsList: Map<Int, MutableList<Int>> = mutableMapOf()
+    private var multiViewLayout = false
+
+    private var clickableItem: Boolean = false
+    private var longClickableItem: Boolean = false
+    private var hasOptionMenu: Boolean = false
+    private var optionMenu: Int = 0
+    private var optionMenuViewId: Int = 0
+
+    private constructor(
+        context: Context,
+        dataList: MutableList<T>,
+        layout: Int,
+        viewsList: MutableList<Int>
+    ) : this(context, dataList) {
+        this.layout = layout
+        this.viewsList = viewsList
+    }
+
+    private constructor(
+        context: Context,
+        dataList: MutableList<T>,
+        layouts: Map<Int, Int>,
+        mapViewsList: Map<Int, MutableList<Int>>
+    ) : this(context, dataList) {
+        this.layouts = layouts
+        this.mapViewsList = mapViewsList
+        multiViewLayout = true
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(context, LayoutInflater.from(context).inflate(layout, parent, false))
+        return if (multiViewLayout) {
+            ViewHolder(context, LayoutInflater.from(context).inflate(layouts!![viewType]!!, parent, false))
+        } else {
+            ViewHolder(context, LayoutInflater.from(context).inflate(layout, parent, false))
+        }
     }
 
     override fun getItemCount() = dataList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(dataList[position], position)
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (mBindItemViewType != null)
+            mBindItemViewType?.invoke(dataList[position])!!
+        else
+            bindItemViewType?.bindItemViewType(dataList[position])!!
     }
 
     fun changeDataList(list: MutableList<T>) {
@@ -121,23 +172,32 @@ class SimpleRecyclerAdaptor<T> private constructor(
     fun setDataBindListener(onDataBindListener: OnDataBindListener<T>) =
         apply { this.onDataBindListener = onDataBindListener }
 
-    fun setDataBindListener(onDataBindListener: (view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit):
-            SimpleRecyclerAdaptor<T> {
-        this.mOnDataBindListener = onDataBindListener
-        return this
-    }
+    fun setDataBindListener(onDataBindListener: (view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit) =
+        apply { this.mOnDataBindListener = onDataBindListener }
+
+    fun setMultiViewDataBindListener(onMultiViewDataBindListener: OnMultiViewDataBindListener<T>) =
+        apply { this.onMultiViewDataBindListener = onMultiViewDataBindListener }
+
+    fun setMultiViewDataBindListener(onMultiViewDataBindListener:(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit) =
+        apply { this.mOnMultiViewDataBindListener = onMultiViewDataBindListener }
+
+    fun setBindViewType(bindItemViewType: BindItemViewType<T>) =
+        apply { this.bindItemViewType = bindItemViewType }
+
+    fun setBindViewType(mBindItemViewType: (item: T) -> Int) =
+        apply { this.mBindItemViewType = mBindItemViewType }
 
     fun setItemClickListener(onItemClickListener: OnItemClickListener<T>) =
-        apply { this.onItemClickListener = onItemClickListener }
+        apply { this.clickableItem = true; this.onItemClickListener = onItemClickListener }
 
     fun setItemClickListener(onItemClickListener: (item: T, position: Int) -> Unit) =
-        apply { this.mOnItemClickListener = onItemClickListener }
+        apply { this.clickableItem = true; this.mOnItemClickListener = onItemClickListener }
 
     fun setItemLongClickListener(onItemLongClickListener: OnItemLongClickListener<T>) =
-        apply { this.onItemLongClickListener = onItemLongClickListener }
+        apply { this.longClickableItem = true; this.onItemLongClickListener = onItemLongClickListener }
 
     fun setItemLongClickListener(onItemLongClickListener: (item: T, position: Int) -> Unit) =
-        apply { this.mOnItemLongClickListener = onItemLongClickListener }
+        apply { this.longClickableItem = true; this.mOnItemLongClickListener = onItemLongClickListener }
 
     fun setItemChildClickListener(onItemChildClickListener: OnItemChildClickListener<T>) =
         apply { this.onItemChildClickListener = onItemChildClickListener }
@@ -146,13 +206,20 @@ class SimpleRecyclerAdaptor<T> private constructor(
         apply { this.mOnItemChildClickListener = onItemChildClickListener }
 
     fun setOptionMenuClickListener(onOptionMenuClickListener: OnOptionMenuClickListener<T>) =
-        apply { this.onOptionMenuClickListener = onOptionMenuClickListener }
+        apply { this.hasOptionMenu = true; this.onOptionMenuClickListener = onOptionMenuClickListener }
 
     fun setOptionMenuClickListener(onOptionMenuClickListener: (popUpMenu: PopupMenu, item: T, position: Int) -> Unit) =
-        apply { this.mOnOptionMenuClickListener = onOptionMenuClickListener }
+        apply { this.hasOptionMenu = true; this.mOnOptionMenuClickListener = onOptionMenuClickListener }
+
+    fun setOptionMenu(optionMenuViewId: Int, menu: Int) =
+        apply { this.optionMenuViewId = optionMenuViewId; this.optionMenu = menu }
 
     private fun onDataBind(view: View, item: T, position: Int, viewMap: Map<Int, View>) {
         onDataBindListener?.onDataBind(view, item, position, viewMap)
+    }
+
+    private fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) {
+        onMultiViewDataBindListener?.onMultiViewDataBind(view, item, position, typedViewMap)
     }
 
     private fun onItemClick(data: T, position: Int) {
@@ -174,34 +241,69 @@ class SimpleRecyclerAdaptor<T> private constructor(
     class Builder<T>(private val context: Context) {
 
         private var dataList: MutableList<T> = mutableListOf()
-        private var viewsList: MutableList<Int> = mutableListOf()
+
         private var layout = 0
+        private var viewsList: MutableList<Int> = mutableListOf()
+
+        private var layouts: Map<Int, Int> = emptyMap()
+        private var mapViewsList: Map<Int, MutableList<Int>> = mapOf(0 to mutableListOf())
+
         private var optionMenu = 0
         private var optionMenuViewId = 0
-        private var clickableItem = false
-        private var longClickableItem = false
-        private var hasOptionMenu = false
 
         private var onDataBindListener: OnDataBindListener<T>? = null
+        private var onMultiViewDataBindListener: OnMultiViewDataBindListener<T>? = null
+        private var bindItemViewType: BindItemViewType<T>? = null
         private var onItemClickListener: OnItemClickListener<T>? = null
         private var onItemLongClickListener: OnItemLongClickListener<T>? = null
         private var onOptionMenuClickListener: OnOptionMenuClickListener<T>? = null
         private var onItemChildClickListener: OnItemChildClickListener<T>? = null
 
         private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
+        private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
+        private var mBindItemViewType: ((item: T) -> Int)? = null
         private var mOnItemClickListener: ((item: T, position: Int) -> Unit)? = null
         private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
         private var mOnOptionMenuClickListener: ((popUpMenu: PopupMenu, item: T, position: Int) -> Unit)? = null
         private var mOnItemChildClickListener: ((item: T, position: Int, view: View) -> Unit)? = null
 
         fun setDataList(dataList: MutableList<T>) = apply { this.dataList = dataList }
+
         fun setLayout(layout: Int) = apply { this.layout = layout }
-        fun addViews(resId: Int) = apply { viewsList.add(resId) }
+        fun setLayouts(layouts: Map<Int, Int>) = apply { this.layouts = layouts }
+
+        fun addView(resId: Int) = apply { viewsList.add(resId) }
         fun addViews(vararg resId: Int) = apply { resId.forEach { viewsList.add(it) } }
         fun addViews(list: List<Int>) = apply { viewsList = list as MutableList<Int> }
 
+        fun addView(viewType: Int, resId: Int) = apply {
+            if (mapViewsList.containsKey(viewType)) {
+                mapViewsList[viewType]?.add(resId)
+            } else {
+                mapViewsList = mapOf(viewType to mutableListOf(resId))
+            }
+        }
+
+        fun addViews(viewType: Int, vararg resId: Int) = apply {
+            resId.forEach {
+                if (mapViewsList.containsKey(viewType)) {
+                    mapViewsList[viewType]?.add(it)
+                } else {
+                    mapViewsList = mapOf(viewType to mutableListOf(it))
+                }
+            }
+        }
+
+        fun addViews(viewType: Int, list: List<Int>) = apply {
+            if (mapViewsList.containsKey(viewType)) {
+                mapViewsList[viewType]?.addAll(list)
+            } else {
+                mapViewsList = mapOf(viewType to list as MutableList<Int>)
+            }
+        }
+
         fun setOptionMenu(optionMenuViewId: Int, menu: Int) =
-            apply { hasOptionMenu = true; this.optionMenuViewId = optionMenuViewId; this.optionMenu = menu }
+            apply { this.optionMenuViewId = optionMenuViewId; this.optionMenu = menu }
 
         fun setBindViewListener(onDataBindListener: OnDataBindListener<T>) =
             apply { this.onDataBindListener = onDataBindListener }
@@ -209,14 +311,26 @@ class SimpleRecyclerAdaptor<T> private constructor(
         fun setBindViewListener(onDataBindListener: (view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit) =
             apply { this.mOnDataBindListener = onDataBindListener }
 
+        fun setMultiViewDataBindListener(onMultiViewDataBindListener: OnMultiViewDataBindListener<T>) =
+            apply { this.onMultiViewDataBindListener = onMultiViewDataBindListener }
+
+        fun setMultiViewDataBindListener(onMultiViewDataBindListener: (view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit) =
+            apply { this.mOnMultiViewDataBindListener = onMultiViewDataBindListener }
+
+        fun setBindViewType(bindItemViewType: BindItemViewType<T>) =
+            apply { this.bindItemViewType = bindItemViewType }
+
+        fun setBindViewType(mBindItemViewType: (item: T) -> Int) =
+            apply { this.mBindItemViewType = mBindItemViewType }
+
         fun setItemClickListener(onItemClickListener: OnItemClickListener<T>) =
-            apply { clickableItem = true; this.onItemClickListener = onItemClickListener }
+            apply { this.onItemClickListener = onItemClickListener }
 
         fun setItemClickListener(onItemClickListener: (item: T, position: Int) -> Unit) =
             apply { this.mOnItemClickListener = onItemClickListener }
 
         fun setItemLongClickListener(onItemLongClickListener: OnItemLongClickListener<T>) =
-            apply { longClickableItem = true; this.onItemLongClickListener = onItemLongClickListener }
+            apply { this.onItemLongClickListener = onItemLongClickListener }
 
         fun setItemLongClickListener(onItemLongClickListener: (item: T, position: Int) -> Unit) =
             apply { this.mOnItemLongClickListener = onItemLongClickListener }
@@ -276,13 +390,22 @@ class SimpleRecyclerAdaptor<T> private constructor(
         }
 
         private fun initAdaptor(): SimpleRecyclerAdaptor<T> {
-            val adaptor = SimpleRecyclerAdaptor(
-                context, dataList, layout, viewsList,
-                clickableItem, longClickableItem, hasOptionMenu, optionMenu, optionMenuViewId
-            )
+            val adaptor = if (layouts.isNotEmpty() && mapViewsList.isNotEmpty()) {
+                SimpleRecyclerAdaptor(context, dataList, layouts, mapViewsList)
+            } else {
+                SimpleRecyclerAdaptor(context, dataList, layout, viewsList)
+            }
+
+            adaptor.setOptionMenu(optionMenu, optionMenuViewId)
 
             if (mOnDataBindListener != null) adaptor.setDataBindListener(mOnDataBindListener!!)
             else if (onDataBindListener != null) adaptor.setDataBindListener(onDataBindListener!!)
+
+            if (mOnMultiViewDataBindListener != null) adaptor.setMultiViewDataBindListener(mOnMultiViewDataBindListener!!)
+            else if (onMultiViewDataBindListener != null) adaptor.setMultiViewDataBindListener(onMultiViewDataBindListener!!)
+
+            if (bindItemViewType != null) adaptor.setBindViewType(bindItemViewType!!)
+            else if (mBindItemViewType != null) adaptor.setBindViewType(mBindItemViewType!!)
 
             if (mOnItemClickListener != null) adaptor.setItemClickListener(mOnItemClickListener!!)
             else if (onItemClickListener != null) adaptor.setItemClickListener(onItemClickListener!!)
@@ -305,6 +428,7 @@ class SimpleRecyclerAdaptor<T> private constructor(
         RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
         private var viewMap: MutableMap<Int, View> = mutableMapOf()
+        private var typedViewMap: MutableMap<Int, MutableMap<Int, View>> = mutableMapOf()
         private var item: T? = null
         private var pos: Int = 0
 
@@ -325,24 +449,44 @@ class SimpleRecyclerAdaptor<T> private constructor(
                     val popUpMenu = PopupMenu(context, om)
                     popUpMenu.inflate(optionMenu)
 
-                    mOnOptionMenuClickListener?.invoke(popUpMenu, item!!, pos)
-
+                    if (mOnOptionMenuClickListener != null)
+                        mOnOptionMenuClickListener?.invoke(popUpMenu, item!!, pos)
+                    else
+                        onOptionMenuClickListener(popUpMenu, item!!, pos)
                 }
 
             }
 
-            viewsList.forEach {
-                viewMap[it] = view.findViewById(it)
+            if (multiViewLayout) {
+                mapViewsList.forEach { (type, mutableList) ->
+                    var map = mutableMapOf<Int, View>()
+                    mutableList.forEach { id ->
+                        map = mutableMapOf(id to view.findViewById(id))
+                    }
+                    typedViewMap[type] = map
+                }
+            } else {
+                viewsList.forEach {
+                    viewMap[it] = view.findViewById(it)
+                }
             }
         }
 
         fun bind(t: T, p: Int) {
             item = t
             pos = p
-            if (mOnDataBindListener != null) {
-                mOnDataBindListener?.invoke(view, t, p, viewMap)
+            if (multiViewLayout) {
+                if (mOnMultiViewDataBindListener != null) {
+                    mOnMultiViewDataBindListener?.invoke(view, t, p, typedViewMap)
+                } else {
+                    onMultiViewDataBind(view, t, p, typedViewMap)
+                }
             } else {
-                onDataBind(view, t, p, viewMap)
+                if (mOnDataBindListener != null) {
+                    mOnDataBindListener?.invoke(view, t, p, viewMap)
+                } else {
+                    onDataBind(view, t, p, viewMap)
+                }
             }
         }
 

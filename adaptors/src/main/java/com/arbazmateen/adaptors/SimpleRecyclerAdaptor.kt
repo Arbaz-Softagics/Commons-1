@@ -56,10 +56,8 @@ object Orientation {
 }
 
 
-class SimpleRecyclerAdaptor<T> private constructor(
-    private val context: Context,
-    private var dataList: MutableList<T>
-) : RecyclerView.Adapter<SimpleRecyclerAdaptor<T>.ViewHolder>() {
+class SimpleRecyclerAdaptor<T> private constructor(private val context: Context, private var dataList: MutableList<T>)
+    : RecyclerView.Adapter<SimpleRecyclerAdaptor<T>.ViewHolder>() {
 
     private var onDataBindListener: OnDataBindListener<T>? = null
     private var onMultiViewDataBindListener: OnMultiViewDataBindListener<T>? = null
@@ -90,22 +88,14 @@ class SimpleRecyclerAdaptor<T> private constructor(
     private var optionMenu: Int = 0
     private var optionMenuViewId: Int = 0
 
-    private constructor(
-        context: Context,
-        dataList: MutableList<T>,
-        layout: Int,
-        viewsList: MutableList<Int>
-    ) : this(context, dataList) {
+    private constructor(context: Context, dataList: MutableList<T>, layout: Int, viewsList: MutableList<Int>):
+            this(context, dataList) {
         this.layout = layout
         this.viewsList = viewsList
     }
 
-    private constructor(
-        context: Context,
-        dataList: MutableList<T>,
-        layouts: Map<Int, Int>,
-        mapViewsList: Map<Int, MutableList<Int>>
-    ) : this(context, dataList) {
+    private constructor(context: Context, dataList: MutableList<T>, layouts: Map<Int, Int>, mapViewsList: Map<Int, MutableList<Int>>):
+            this(context, dataList) {
         this.layouts = layouts
         this.mapViewsList = mapViewsList
         multiViewLayout = true
@@ -126,10 +116,14 @@ class SimpleRecyclerAdaptor<T> private constructor(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (mBindItemViewType != null)
-            mBindItemViewType?.invoke(dataList[position])!!
-        else
-            bindItemViewType?.bindItemViewType(dataList[position])!!
+        return if(multiViewLayout) {
+            if (mBindItemViewType != null)
+                mBindItemViewType?.invoke(dataList[position])!!
+            else
+                bindItemViewType?.bindItemViewType(dataList[position])!!
+        } else {
+            super.getItemViewType(position)
+        }
     }
 
     fun changeDataList(list: MutableList<T>) {
@@ -362,10 +356,8 @@ class SimpleRecyclerAdaptor<T> private constructor(
             recyclerView.adapter = adaptor
         }
 
-        fun into(
-            recyclerView: RecyclerView, layoutType: LayoutType = LayoutType.LIST, spanCount: Int = 2,
-            orientation: Int = Orientation.VERTICAL, divider: Boolean = false
-        ) {
+        fun into(recyclerView: RecyclerView, layoutType: LayoutType = LayoutType.LIST, spanCount: Int = 2,
+            orientation: Int = Orientation.VERTICAL, divider: Boolean = false) {
             val adaptor = initAdaptor()
 
             if (divider && layoutType == LayoutType.LIST) {
@@ -433,13 +425,9 @@ class SimpleRecyclerAdaptor<T> private constructor(
         private var pos: Int = 0
 
         init {
-            if (clickableItem) {
-                view.setOnClickListener(this)
-            }
+            if (clickableItem) { view.setOnClickListener(this) }
 
-            if (longClickableItem) {
-                view.setOnLongClickListener(this)
-            }
+            if (longClickableItem) { view.setOnLongClickListener(this) }
 
             if (hasOptionMenu && optionMenu != 0 && optionMenuViewId != 0) {
 

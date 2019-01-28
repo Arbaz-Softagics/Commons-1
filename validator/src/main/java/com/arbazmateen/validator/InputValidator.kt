@@ -37,6 +37,14 @@ class InputValidator(val text: String, var textInputLayout: TextInputLayout? = n
         return isValid
     }
 
+    fun validateWith(editText: EditText, errorMsg: String): Boolean {
+        val text = editText.text.trim()
+        if(this.text != text) {
+            setErrorMessage(errorMsg)
+        }
+        return validate()
+    }
+
     fun required(): InputValidator {
         if (text.isEmpty()) {
             setErrorMessage("Required field.")

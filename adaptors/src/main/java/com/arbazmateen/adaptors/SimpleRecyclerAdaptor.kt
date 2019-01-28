@@ -46,6 +46,11 @@ interface OnItemChildClickListener<T> {
     fun onItemChildClick(item: T, position: Int, view: View)
 }
 
+@FunctionalInterface
+interface OnRetryClickListener {
+    fun onRetry()
+}
+
 enum class LayoutType {
     LIST, GRID, STAGGERED
 }
@@ -57,7 +62,16 @@ object Orientation {
 
 
 class SimpleRecyclerAdaptor<T> private constructor(private val context: Context, private var dataList: MutableList<T>)
-    : RecyclerView.Adapter<SimpleRecyclerAdaptor<T>.ViewHolder>() {
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val ITEM = 0
+        const val LOADING = -1
+        const val ERROR = -2
+    }
+
+    var isLoading = false
+    var isError = false
 
     private var onDataBindListener: OnDataBindListener<T>? = null
     private var onMultiViewDataBindListener: OnMultiViewDataBindListener<T>? = null
@@ -66,6 +80,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     private var onItemLongClickListener: OnItemLongClickListener<T>? = null
     private var onOptionMenuClickListener: OnOptionMenuClickListener<T>? = null
     private var onItemChildClickListener: OnItemChildClickListener<T>? = null
+    private var onRetryClickListener: OnRetryClickListener? = null
 
     private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
     private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
@@ -74,6 +89,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
     private var mOnOptionMenuClickListener: ((popUpMenu: PopupMenu, item: T, position: Int) -> Unit)? = null
     private var mOnItemChildClickListener: ((item: T, position: Int, view: View) -> Unit)? = null
+    private var mOnRetryClickListener: (() -> Unit)? = null
 
     private var layout: Int = -1
     private var viewsList: MutableList<Int> = mutableListOf()
@@ -101,21 +117,41 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         multiViewLayout = true
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(context)
+        when(viewType) {
+            LOADING -> {
+                return LoadingViewHolder(context, inflater.inflate(R.layout.paginated_item_progress, parent, false))
+            }
+            ERROR -> {
+                return ErrorViewHolder(context, inflater.inflate(R.layout.paginated_item_progress, parent, false))
+            }
+        }
         return if (multiViewLayout) {
-            ViewHolder(context, LayoutInflater.from(context).inflate(layouts!![viewType]!!, parent, false))
+            ViewHolder(context, inflater.inflate(layouts!![viewType]!!, parent, false))
         } else {
-            ViewHolder(context, LayoutInflater.from(context).inflate(layout, parent, false))
+            ViewHolder(context, inflater.inflate(layout, parent, false))
         }
     }
 
     override fun getItemCount() = dataList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataList[position], position)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when(getItemViewType(position)) {
+            LOADING -> { }
+            ERROR -> { }
+            else -> {
+                val itemHolder = holder as SimpleRecyclerAdaptor<T>.ViewHolder
+                itemHolder.bind(dataList[position], position)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
+        if(position == dataList.size - 1) {
+            if(isLoading) return LOADING else if(isError) return ERROR
+        }
+
         return if(multiViewLayout) {
             if (mBindItemViewType != null)
                 mBindItemViewType?.invoke(dataList[position])!!
@@ -163,6 +199,30 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         notifyItemChanged(position)
     }
 
+    fun addProgress(item: T) {
+        isLoading = true
+        dataList.add(item)
+        notifyItemInserted(dataList.size - 1)
+    }
+
+    fun removeLoading() {
+        isLoading = false
+        dataList.removeAt(dataList.size - 1)
+        notifyItemRemoved(dataList.size - 1)
+    }
+
+    fun addError(item: T) {
+        isError = true
+        dataList.add(item)
+        notifyItemInserted(dataList.size - 1)
+    }
+
+    fun removeError() {
+        isError = false
+        dataList.removeAt(dataList.size - 1)
+        notifyItemRemoved(dataList.size - 1)
+    }
+
     fun setDataBindListener(onDataBindListener: OnDataBindListener<T>) =
         apply { this.onDataBindListener = onDataBindListener }
 
@@ -208,6 +268,12 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     fun setOptionMenu(optionMenuViewId: Int, menu: Int) =
         apply { this.optionMenuViewId = optionMenuViewId; this.optionMenu = menu }
 
+    fun setOnRetryClickListener(onRetryClickListener: OnRetryClickListener) =
+        apply { this.onRetryClickListener = onRetryClickListener }
+
+    fun setOnRetryClickListener(onRetryClickListener: () -> Unit) =
+        apply { this.mOnRetryClickListener = onRetryClickListener }
+
     private fun onDataBind(view: View, item: T, position: Int, viewMap: Map<Int, View>) {
         onDataBindListener?.onDataBind(view, item, position, viewMap)
     }
@@ -252,6 +318,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         private var onItemLongClickListener: OnItemLongClickListener<T>? = null
         private var onOptionMenuClickListener: OnOptionMenuClickListener<T>? = null
         private var onItemChildClickListener: OnItemChildClickListener<T>? = null
+        private var onRetryClickListener: OnRetryClickListener? = null
 
         private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
         private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
@@ -260,6 +327,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
         private var mOnOptionMenuClickListener: ((popUpMenu: PopupMenu, item: T, position: Int) -> Unit)? = null
         private var mOnItemChildClickListener: ((item: T, position: Int, view: View) -> Unit)? = null
+        private var mOnRetryClickListener: (() -> Unit)? = null
 
         fun setDataList(dataList: MutableList<T>) = apply { this.dataList = dataList }
 
@@ -341,6 +409,12 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         fun setOptionMenuClickListener(onOptionMenuClickListener: (popUpMenu: PopupMenu, item: T, position: Int) -> Unit) =
             apply { this.mOnOptionMenuClickListener = onOptionMenuClickListener }
 
+        fun setOnRetryClickListener(onRetryClickListener: OnRetryClickListener) =
+            apply { this.onRetryClickListener = onRetryClickListener }
+
+        fun setOnRetryClickListener(onRetryClickListener: () -> Unit) =
+            apply { this.mOnRetryClickListener = onRetryClickListener }
+
         fun build(): SimpleRecyclerAdaptor<T> {
             return initAdaptor()
         }
@@ -410,6 +484,9 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
 
             if (mOnOptionMenuClickListener != null) adaptor.setOptionMenuClickListener(mOnOptionMenuClickListener!!)
             else if (onOptionMenuClickListener != null) adaptor.setOptionMenuClickListener(onOptionMenuClickListener!!)
+
+            if (mOnRetryClickListener != null) adaptor.setOnRetryClickListener(mOnRetryClickListener!!)
+            else if (onRetryClickListener != null) adaptor.setOnRetryClickListener(onRetryClickListener!!)
 
             return adaptor
         }
@@ -496,4 +573,25 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         }
     }
 
+    inner class LoadingViewHolder(private val context: Context, private val view: View) :
+        RecyclerView.ViewHolder(view) {
+
+    }
+
+    inner class ErrorViewHolder(private val context: Context, private val view: View) :
+        RecyclerView.ViewHolder(view), View.OnClickListener {
+
+        init {
+            view.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            if(mOnRetryClickListener != null) {
+                mOnRetryClickListener?.invoke()
+            } else {
+                onRetryClickListener?.onRetry()
+            }
+        }
+
+    }
 }

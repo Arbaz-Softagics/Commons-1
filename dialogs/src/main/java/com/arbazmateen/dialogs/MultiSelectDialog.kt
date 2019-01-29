@@ -25,7 +25,7 @@ abstract class MultiSelectModel(open var id: Long,
 /**************************************************************************
 ** Multi Select Adaptor
 **************************************************************************/
-class MultiSelectAdaptor<T : MultiSelectModel>(val context: Context, private var dataList: MutableList<T>):
+class MultiSelectAdaptor<T : MultiSelectModel>(private val context: Context, private var dataList: MutableList<T>):
     RecyclerView.Adapter<MultiSelectAdaptor<T>.ViewHolder>() {
 
     var selectedIdsList = mutableListOf<Long>()
@@ -188,7 +188,7 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         if(mainDataList.isNotEmpty() && preSelectedIds.isNotEmpty()) {
             if(mainDataList.size == preSelectedIds.size) {
                 selectAllCheckBox.isChecked = true
-                selectAllTextView.text = "UN SELECT ALL"
+                selectAllTextView.text = "DESELECT ALL"
             } else {
                 selectAllCheckBox.isChecked = false
                 selectAllTextView.text = "SELECT ALL"
@@ -242,9 +242,11 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         when(view?.id) {
             R.id.done -> {
                 if(onSubmitClickListener != null) {
-                    onSubmitClickListener?.invoke(adaptor.selectedIdsList, adaptor.selectedItemsList,
-                        adaptor.selectedItemsList.toString()
-                            .replace("[", "").replace("]", ""))
+                    val text = adaptor.selectedItemsList.toString()
+                    onSubmitClickListener?.invoke(
+                        adaptor.selectedIdsList,
+                        adaptor.selectedItemsList,
+                        text.substring(1, text.length - 1))
 
                     dismiss()
                 }

@@ -124,7 +124,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
                 return LoadingViewHolder(context, inflater.inflate(R.layout.paginated_item_progress, parent, false))
             }
             ERROR -> {
-                return ErrorViewHolder(context, inflater.inflate(R.layout.paginated_item_progress, parent, false))
+                return ErrorViewHolder(context, inflater.inflate(R.layout.paginated_item_error, parent, false))
             }
         }
         return if (multiViewLayout) {

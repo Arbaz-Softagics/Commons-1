@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">adaptors</string>
+    <string name="error_image_description">Error Image Description</string>
 </resources>

@@ -12,7 +12,6 @@ fun EditText.validator(layout: TextInputLayout? = null) = InputValidator(this.te
 /**************************************************************************
  ** Edit text validator class
  **************************************************************************/
-
 class InputValidator(val text: String, var textInputLayout: TextInputLayout? = null) {
 
     private var isValid = true
@@ -52,7 +51,7 @@ class InputValidator(val text: String, var textInputLayout: TextInputLayout? = n
         return this
     }
 
-    fun required(regex: String, error: String = "Invalid input"): InputValidator {
+    fun required(regex: String, error: String = "Required field."): InputValidator {
         if (!text.matches(Regex(regex))) {
             setErrorMessage(error)
         }

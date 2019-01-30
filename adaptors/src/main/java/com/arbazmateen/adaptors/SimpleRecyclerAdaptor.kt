@@ -18,7 +18,7 @@ interface OnDataBindListener<T> {
 
 @FunctionalInterface
 interface OnMultiViewDataBindListener<T> {
-    fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>)
+    fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>)
 }
 
 @FunctionalInterface
@@ -83,7 +83,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     private var onRetryClickListener: OnRetryClickListener? = null
 
     private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
-    private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
+    private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>) -> Unit)? = null
     private var mBindItemViewType: ((item: T) -> Int)? = null
     private var mOnItemClickListener: ((item: T, position: Int) -> Unit)? = null
     private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
@@ -232,7 +232,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     fun setMultiViewDataBindListener(onMultiViewDataBindListener: OnMultiViewDataBindListener<T>) =
         apply { this.onMultiViewDataBindListener = onMultiViewDataBindListener }
 
-    fun setMultiViewDataBindListener(onMultiViewDataBindListener:(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit) =
+    fun setMultiViewDataBindListener(onMultiViewDataBindListener:(view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>) -> Unit) =
         apply { this.mOnMultiViewDataBindListener = onMultiViewDataBindListener }
 
     fun setBindViewType(bindItemViewType: BindItemViewType<T>) =
@@ -278,7 +278,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         onDataBindListener?.onDataBind(view, item, position, viewMap)
     }
 
-    private fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) {
+    private fun onMultiViewDataBind(view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>) {
         onMultiViewDataBindListener?.onMultiViewDataBind(view, item, position, typedViewMap)
     }
 
@@ -306,7 +306,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         private var viewsList: MutableList<Int> = mutableListOf()
 
         private var layouts: Map<Int, Int> = emptyMap()
-        private var mapViewsList: Map<Int, MutableList<Int>> = mapOf(0 to mutableListOf())
+        private var mapViewsList: Map<Int, MutableList<Int>> = emptyMap()
 
         private var optionMenu = 0
         private var optionMenuViewId = 0
@@ -321,7 +321,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         private var onRetryClickListener: OnRetryClickListener? = null
 
         private var mOnDataBindListener: ((view: View, item: T, position: Int, viewMap: Map<Int, View>) -> Unit)? = null
-        private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit)? = null
+        private var mOnMultiViewDataBindListener:((view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>) -> Unit)? = null
         private var mBindItemViewType: ((item: T) -> Int)? = null
         private var mOnItemClickListener: ((item: T, position: Int) -> Unit)? = null
         private var mOnItemLongClickListener: ((item: T, position: Int) -> Unit)? = null
@@ -376,7 +376,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         fun setMultiViewDataBindListener(onMultiViewDataBindListener: OnMultiViewDataBindListener<T>) =
             apply { this.onMultiViewDataBindListener = onMultiViewDataBindListener }
 
-        fun setMultiViewDataBindListener(onMultiViewDataBindListener: (view: View, item: T, position: Int, typedViewMap: Map<Int, MutableMap<Int, View>>) -> Unit) =
+        fun setMultiViewDataBindListener(onMultiViewDataBindListener: (view: View, item: T, position: Int, typedViewMap: Map<Int, Map<Int, View>>) -> Unit) =
             apply { this.mOnMultiViewDataBindListener = onMultiViewDataBindListener }
 
         fun setBindViewType(bindItemViewType: BindItemViewType<T>) =

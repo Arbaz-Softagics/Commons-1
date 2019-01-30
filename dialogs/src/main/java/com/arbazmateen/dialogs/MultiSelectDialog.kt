@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -234,7 +235,14 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
     override fun onQueryTextSubmit(query: String?): Boolean { return false }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-
+        if(!newText.isNullOrEmpty()) {
+            val filteredList = mainDataList.asSequence()
+                .filter { item -> item.displayText.toLowerCase().contains(newText.toLowerCase()) }
+                .toMutableList()
+            adaptor.changeData(filteredList)
+        } else {
+            adaptor.changeData(mainDataList)
+        }
         return false
     }
 
@@ -242,13 +250,24 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         when(view?.id) {
             R.id.done -> {
                 if(onSubmitClickListener != null) {
-                    val text = adaptor.selectedItemsList.toString()
-                    onSubmitClickListener?.invoke(
-                        adaptor.selectedIdsList,
-                        adaptor.selectedItemsList,
-                        text.substring(1, text.length - 1))
+                    val size = adaptor.selectedItemsList.size
+                    when {
+                        size < minSelect -> {
+                            Toast.makeText(mContext, "Minimum selection required: $minSelect", Toast.LENGTH_LONG).show()
+                        }
+                        size > maxSelect -> {
+                            Toast.makeText(mContext, "Maximum selection allowed: $maxSelect", Toast.LENGTH_LONG).show()
+                        }
+                        else -> {
+                            val text = adaptor.selectedItemsList.toString()
+                            onSubmitClickListener?.invoke(
+                                adaptor.selectedIdsList,
+                                adaptor.selectedItemsList,
+                                text.substring(1, text.length - 1))
 
-                    dismiss()
+                            dismiss()
+                        }
+                    }
                 }
             }
             R.id.cancel -> {

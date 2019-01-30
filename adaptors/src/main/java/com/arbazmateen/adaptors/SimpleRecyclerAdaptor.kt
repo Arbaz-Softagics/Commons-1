@@ -199,7 +199,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         notifyItemChanged(position)
     }
 
-    fun addProgress(item: T) {
+    fun addLoading(item: T) {
         isLoading = true
         dataList.add(item)
         notifyItemInserted(dataList.size - 1)

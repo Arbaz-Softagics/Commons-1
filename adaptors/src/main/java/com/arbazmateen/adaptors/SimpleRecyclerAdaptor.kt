@@ -60,7 +60,9 @@ object Orientation {
     const val HORIZONTAL = RecyclerView.HORIZONTAL
 }
 
-
+/**************************************************************************
+** Recycler Adaptor
+**************************************************************************/
 class SimpleRecyclerAdaptor<T> private constructor(private val context: Context, private var dataList: MutableList<T>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -172,6 +174,10 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         notifyItemRangeInserted(dataList.size - 1, list.size)
     }
 
+    fun addDataListInOrder(list: MutableList<T>) {
+        list.forEach { addItem(it) }
+    }
+
     fun addItem(item: T) {
         dataList.add(item)
         notifyItemInserted(dataList.size - 1)
@@ -187,12 +193,12 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         notifyItemRemoved(position)
     }
 
+    fun getItem(position: Int) = dataList[position]
+
     fun updateItem(data: T, position: Int) {
         dataList[position] = data
         notifyItemChanged(position)
     }
-
-    fun getItem(position: Int) = dataList[position]
 
     fun updateItemState(position: Int, changes: T.() -> Unit) {
         dataList[position].changes()
@@ -200,27 +206,37 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     }
 
     fun addLoading(item: T) {
-        isLoading = true
-        dataList.add(item)
-        notifyItemInserted(dataList.size - 1)
+        removeError()
+        if(!isLoading) {
+            isLoading = true
+            dataList.add(item)
+            notifyItemInserted(dataList.size - 1)
+        }
     }
 
     fun removeLoading() {
-        isLoading = false
-        dataList.removeAt(dataList.size - 1)
-        notifyItemRemoved(dataList.size - 1)
+        if(isLoading) {
+            isLoading = false
+            dataList.removeAt(dataList.size - 1)
+            notifyItemRemoved(dataList.size - 1)
+        }
     }
 
     fun addError(item: T) {
-        isError = true
-        dataList.add(item)
-        notifyItemInserted(dataList.size - 1)
+        removeLoading()
+        if(!isError) {
+            isError = true
+            dataList.add(item)
+            notifyItemInserted(dataList.size - 1)
+        }
     }
 
     fun removeError() {
-        isError = false
-        dataList.removeAt(dataList.size - 1)
-        notifyItemRemoved(dataList.size - 1)
+        if(isError) {
+            isError = false
+            dataList.removeAt(dataList.size - 1)
+            notifyItemRemoved(dataList.size - 1)
+        }
     }
 
     fun setDataBindListener(onDataBindListener: OnDataBindListener<T>) =
@@ -298,6 +314,9 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         onItemChildClickListener?.onItemChildClick(data, position, view)
     }
 
+    /**************************************************************************
+    ** Builder Pattern
+    **************************************************************************/
     class Builder<T>(private val context: Context) {
 
         private var dataList: MutableList<T> = mutableListOf()
@@ -493,6 +512,9 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
 
     }
 
+    /**************************************************************************
+    ** Item View Holder
+    **************************************************************************/
     inner class ViewHolder(private val context: Context, private val view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener, View.OnLongClickListener {
 
@@ -573,12 +595,15 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         }
     }
 
-    inner class LoadingViewHolder(private val context: Context, private val view: View) :
-        RecyclerView.ViewHolder(view) {
+    /**************************************************************************
+    ** Loading Item View Holder
+    **************************************************************************/
+    inner class LoadingViewHolder(private val context: Context, private val view: View): RecyclerView.ViewHolder(view)
 
-    }
-
-    inner class ErrorViewHolder(private val context: Context, private val view: View) :
+    /**************************************************************************
+    ** Error Item View Holder
+    **************************************************************************/
+    inner class ErrorViewHolder(private val context: Context, private val view: View):
         RecyclerView.ViewHolder(view), View.OnClickListener {
 
         init {

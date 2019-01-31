@@ -24,7 +24,8 @@
                 android:padding="10dp"
                 android:singleLine="true"
                 android:textSize="18sp"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded" 
+                android:importantForAutofill="no"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

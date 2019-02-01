@@ -7,8 +7,8 @@
 
     <ImageView android:id="@+id/error_view"
                android:layout_margin="8dp"
-               android:layout_width="55dp"
-               android:layout_height="55dp"
+               android:layout_width="45dp"
+               android:layout_height="45dp"
                android:src="@drawable/ic_refresh_black_24dp"
                android:contentDescription="@string/error_image_description"/>
 

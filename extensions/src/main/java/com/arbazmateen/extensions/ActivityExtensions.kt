@@ -32,28 +32,28 @@ fun Activity.hideKeyboard(view: View) {
 }
 
 fun Activity.getIntValue(key: String, default: Int = 0): Int {
-    if(intent != null && intent.extras != null) {
+    if(intent != null && intent.extras != null && intent.extras!!.containsKey(key)) {
         return intent.extras?.getInt(key) ?: default
     }
     return default
 }
 
 fun Activity.getLongValue(key: String, default: Long = 0L): Long {
-    if(intent != null && intent.extras != null) {
+    if(intent != null && intent.extras != null && intent.extras!!.containsKey(key)) {
         return intent.extras?.getLong(key) ?: default
     }
     return default
 }
 
 fun Activity.getStringValue(key: String, default: String = ""): String {
-    if(intent != null && intent.extras != null) {
+    if(intent != null && intent.extras != null && intent.extras!!.containsKey(key)) {
         return intent.extras?.getString(key) ?: default
     }
     return default
 }
 
 inline fun <reified T : Serializable> Activity.getSerializable(key: String): T? {
-    if(intent != null && intent.extras != null) {
+    if(intent != null && intent.extras != null && intent.extras!!.containsKey(key)) {
         try {
             return intent.extras?.getSerializable(key) as T
         } catch (e: Exception) {

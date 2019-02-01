@@ -34,28 +34,28 @@ fun Fragment.hideKeyboard(context: Context, view: View) {
 }
 
 fun Fragment.getIntValue(key: String, default: Int = 0): Int {
-    if(arguments != null) {
+    if(arguments != null && arguments!!.containsKey(key)) {
         return arguments?.getInt(key, default) ?: default
     }
     return default
 }
 
 fun Fragment.getLongValue(key: String, default: Long = 0L): Long {
-    if(arguments != null) {
+    if(arguments != null && arguments!!.containsKey(key)) {
         return arguments?.getLong(key, default) ?: default
     }
     return default
 }
 
 fun Fragment.getStringValue(key: String, default: String = ""): String {
-    if(arguments != null) {
+    if(arguments != null && arguments!!.containsKey(key)) {
         return arguments?.getString(key, default) ?: default
     }
     return default
 }
 
 inline fun <reified T : Serializable> Fragment.getSerializable(key: String): T? {
-    if(arguments != null) {
+    if(arguments != null && arguments!!.containsKey(key)) {
         try {
             return arguments?.getSerializable(key) as T
         } catch (e: Exception) {

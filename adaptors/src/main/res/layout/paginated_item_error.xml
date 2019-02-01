@@ -9,7 +9,7 @@
                android:layout_margin="8dp"
                android:layout_width="45dp"
                android:layout_height="45dp"
-               android:src="@drawable/ic_refresh_black_24dp"
+               android:src="@drawable/ic_refresh"
                android:contentDescription="@string/error_image_description"/>
 
 </LinearLayout>

@@ -256,7 +256,7 @@ class Prefs(private val context: Context, private val preferencesName: String = 
         sharedPreferences.edit().remove(key).apply()
     }
 
-    // examle
+    // example
     // key in Prefs(this)
     operator fun contains(key: String): Boolean {
         return sharedPreferences.contains(key)

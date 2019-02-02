@@ -2,9 +2,14 @@ package com.arbazmateen.dialogs
 
 import android.app.AlertDialog
 import android.content.Context
+import android.text.InputType
+import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
+
+
 
 class SingleInputDialog private constructor(private val dialog: AlertDialog) {
 
@@ -17,14 +22,25 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
     **************************************************************************/
     class Builder(private val context: Context) {
 
-        private var title: String = ""
-        private var inputHint: String = "Input"
-        private var inputValue: String = ""
-        private var positiveButtonText: String = "OK"
-        private var negativeButtonText: String = "CANCEL"
+        private var title = ""
+        private var inputHint = "Input"
+        private var inputValue = ""
+        private var positiveButtonText = "OK"
+        private var negativeButtonText = "CANCEL"
 
-        private var cancelable: Boolean = false
-        private var required: Boolean = true
+        private lateinit var layoutInputField1: TextInputLayout
+        private lateinit var inputField1: EditText
+
+        private var cancelable = false
+        private var required = true
+        private var validate = false
+
+        private var regex = ""
+        private var errorMsg = ""
+
+        private var multiLine = false
+        private var minLength = 3
+        private var maxLength = 4000
 
         private lateinit var dialogBuilder: AlertDialog.Builder
         private lateinit var dialog: AlertDialog
@@ -36,7 +52,12 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
         fun inputHint(hint: String) = apply { this.inputHint = hint }
         fun inputValue(value: String) = apply { this.inputValue = value }
         fun cancelable(cancelAble: Boolean) = apply { this.cancelable = cancelAble }
-        fun required(required: Boolean) = apply { this.required = required }
+        fun required(required: Boolean, minLength: Int = 3, maxLength: Int = 4000) =
+            apply { this.required = required; this.minLength = minLength; this.maxLength = maxLength }
+        fun validate(regex: String, errorMsg: String) =
+            apply { validate = true; this.regex = regex; this.errorMsg = errorMsg }
+
+        fun multiLine(multiLine: Boolean) = apply { this.multiLine = multiLine }
 
         fun positiveButton(text: String, listener: (text: String) -> Unit) =
             apply { this.positiveButtonText = text; this.submitListener = listener }
@@ -60,24 +81,43 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
 
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_single_input, null)
 
-            val layoutInputField1 = view.findViewById<TextInputLayout>(R.id.text_input_layout1)
-            val inputField1 = view.findViewById<EditText>(R.id.text_field1)
+            layoutInputField1 = view.findViewById(R.id.text_input_layout1)
+            inputField1 = view.findViewById(R.id.text_field1)
 
             inputField1.hint = inputHint
             if(inputValue.isNotEmpty()) inputField1.setText(inputValue)
 
+            with(inputField1) {
+                if(multiLine) {
+                    setSingleLine(false)
+                    inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    minLines = 3
+                    maxLines = 5
+                    imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+                } else {
+                    setSingleLine(true)
+                    inputType = InputType.TYPE_CLASS_TEXT
+                    setOnKeyListener { _, keyCode, keyEvent ->
+                        if(keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                            if(keyEvent.action == KeyEvent.ACTION_DOWN) {
+                                if(checkInput()) {
+                                    submitListener?.invoke(inputField1.text.trim().toString())
+                                    dialog.dismiss()
+                                }
+                                return@setOnKeyListener true
+                            }
+                        }
+                        return@setOnKeyListener false
+                    }
+                }
+            }
+
             dialogBuilder.setTitle(title).setCancelable(cancelable).setView(view)
 
             dialogBuilder.setPositiveButton(positiveButtonText) { dialog, _ ->
-                if(required) {
-                    val text = inputField1.text.trim().toString()
-                    if(text.isEmpty()) {
-                        layoutInputField1.error = "Required"
-                    } else {
-                        layoutInputField1.isErrorEnabled = false
-                        submitListener?.invoke(inputField1.text.trim().toString())
-                        dialog.dismiss()
-                    }
+                if(checkInput()) {
+                    submitListener?.invoke(inputField1.text.trim().toString())
+                    dialog.dismiss()
                 }
             }
 
@@ -87,6 +127,68 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
             }
 
             dialog = dialogBuilder.create()
+        }
+
+        private fun checkInput(): Boolean {
+            val text = inputField1.text.trim().toString()
+            return when {
+                required && validate -> {
+                    when {
+                        text.isEmpty() -> {
+                            layoutInputField1.error = "Required"
+                            false
+                        }
+                        text.length < minLength -> {
+                            layoutInputField1.error = "Minimum length required: $minLength"
+                            false
+                        }
+                        text.length > maxLength -> {
+                            layoutInputField1.error = "Maximum length allowed: $maxLength"
+                            false
+                        }
+                        !text.matches(Regex(regex)) -> {
+                            layoutInputField1.error = errorMsg
+                            false
+                        }
+                        else -> {
+                            layoutInputField1.isErrorEnabled = false
+                            true
+                        }
+                    }
+                }
+                required -> {
+                    when {
+                        text.isEmpty() -> {
+                            layoutInputField1.error = "Required"
+                            false
+                        }
+                        text.length < minLength -> {
+                            layoutInputField1.error = "Minimum length required: $minLength"
+                            false
+                        }
+                        text.length > maxLength -> {
+                            layoutInputField1.error = "Maximum length allowed: $maxLength"
+                            false
+                        }
+                        else -> {
+                            layoutInputField1.isErrorEnabled = false
+                            true
+                        }
+                    }
+                }
+                validate -> {
+                    if(!text.matches(Regex(regex))){
+                        layoutInputField1.error = errorMsg
+                        false
+                    } else {
+                        layoutInputField1.isErrorEnabled = false
+                        true
+                    }
+                }
+                else -> {
+                    true
+                }
+            }
         }
     }
 }

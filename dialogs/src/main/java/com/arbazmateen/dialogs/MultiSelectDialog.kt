@@ -19,7 +19,7 @@ import java.io.Serializable
 /**************************************************************************
 ** Model
 **************************************************************************/
-abstract class MultiSelectModel(open var id: Long,
+abstract class MultiSelectModel(open var itemId: Long,
                                 open var displayText: String,
                                 open var isSelected: Boolean = false): Serializable, Parcelable
 
@@ -72,13 +72,13 @@ class MultiSelectAdaptor<T : MultiSelectModel>(private val context: Context, pri
 //                item!!.isSelected = !item!!.isSelected
                 checkBox.isChecked = item!!.isSelected
 //                if(item!!.isSelected) {
-//                    if(!selectedIdsList.contains(item!!.id)) {
-//                        selectedIdsList.add(item!!.id)
+//                    if(!selectedIdsList.contains(item!!.itemId)) {
+//                        selectedIdsList.add(item!!.itemId)
 //                        selectedItemsList.add(item!!)
 //                    }
 //                } else {
-//                    if(selectedIdsList.contains(item!!.id)) {
-//                        selectedIdsList.remove(item!!.id)
+//                    if(selectedIdsList.contains(item!!.itemId)) {
+//                        selectedIdsList.remove(item!!.itemId)
 //                        selectedItemsList.remove(item!!)
 //                    }
 //                }
@@ -94,10 +94,10 @@ class MultiSelectAdaptor<T : MultiSelectModel>(private val context: Context, pri
                 item!!.isSelected = !item!!.isSelected
                 checkBox.isChecked = item!!.isSelected
                 if(item!!.isSelected) {
-                    selectedIdsList.add(item!!.id)
+                    selectedIdsList.add(item!!.itemId)
                     selectedItemsList.add(item!!)
                 } else {
-                    selectedIdsList.remove(item!!.id)
+                    selectedIdsList.remove(item!!.itemId)
                     selectedItemsList.remove(item!!)
                 }
             }
@@ -295,7 +295,7 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         selectedItems.clear()
         mainDataList.forEach { item ->
             item.isSelected = false
-            val (_, find) = findIn(preSelectedIds, 0, preSelectedIds.size - 1, item.id)
+            val (_, find) = findIn(preSelectedIds, 0, preSelectedIds.size - 1, item.itemId)
             if(find) {
                 item.isSelected = true
                 selectedItems.add(item)
@@ -308,7 +308,7 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         selectedItems.clear()
         mainDataList.forEach { item ->
             item.isSelected = true
-            preSelectedIds.add(item.id)
+            preSelectedIds.add(item.itemId)
             selectedItems.add(item)
         }
         adaptor.changeData(mainDataList)

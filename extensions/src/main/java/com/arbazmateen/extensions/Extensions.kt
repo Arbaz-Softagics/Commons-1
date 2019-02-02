@@ -1,9 +1,17 @@
 package com.arbazmateen.extensions
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.TextAppearanceSpan
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import java.math.BigDecimal
@@ -50,6 +58,19 @@ fun EditText.text(default: String = ""): String {
 
 fun EditText.textCapitalize(default: String = ""): String {
     return this.text(default).capitalize()
+}
+
+/**************************************************************************
+** Text View Extensions
+**************************************************************************/
+fun TextView.setHighlightedText(context: Context, text: String, highlightedText: String, color: Int = R.color.colorAccent) {
+    val spannableString =  SpannableString(text)
+    val startIndex = text.toLowerCase().indexOf(highlightedText)
+    val endIndex = startIndex + highlightedText.length
+    val highlightedColor = ColorStateList(arrayOf(intArrayOf()), intArrayOf(ContextCompat.getColor(context, color)))
+    val textAppearanceSpan = TextAppearanceSpan(null, Typeface.NORMAL, -1, highlightedColor, null)
+    spannableString.setSpan(textAppearanceSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    this.text = spannableString
 }
 
 /**************************************************************************

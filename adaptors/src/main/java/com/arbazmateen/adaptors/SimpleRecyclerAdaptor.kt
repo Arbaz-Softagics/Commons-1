@@ -121,12 +121,15 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     }
 
     fun addDataList(list: MutableList<T>) {
-        dataList.addAll(dataList.size - 1, list)
-        notifyItemRangeInserted(dataList.size - 1, list.size)
+        val size = dataList.size
+        dataList.addAll( size - 1, list)
+        notifyItemRangeInserted(size - 1, list.size)
     }
 
     fun addDataListInOrder(list: MutableList<T>) {
-        list.forEach { addItem(it) }
+        val size = dataList.size
+        list.forEach { dataList.add(it) }
+        notifyItemRangeInserted( size - 1, list.size)
     }
 
     fun addItem(item: T) {

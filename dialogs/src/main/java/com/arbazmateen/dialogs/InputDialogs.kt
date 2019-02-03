@@ -5,12 +5,15 @@ import android.content.Context
 import android.text.InputType
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 
 
-
+/**************************************************************************
+** Single input dialog
+**************************************************************************/
 class SingleInputDialog private constructor(private val dialog: AlertDialog) {
 
     fun show() {
@@ -191,4 +194,26 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
             }
         }
     }
+}
+
+/**************************************************************************
+** Custom layout dialog
+**************************************************************************/
+class CustomLayoutDialog private constructor(private val layout: Int,
+                                             private val views: Map<Int, View>,
+                                             private val dialog: AlertDialog) {
+
+    fun show() {
+        dialog.show()
+    }
+
+    /**************************************************************************
+    ** Builder pattern
+    **************************************************************************/
+    class Builder(private val context: Context) {
+
+
+
+    }
+
 }

@@ -174,17 +174,17 @@ fun String.toDecimal(default: String = "0"): BigDecimal {
 ** View Extensions
 **************************************************************************/
 fun View.hide(condition: Boolean = true) {
-    if(condition) this.visibility = View.GONE
+    this.visibility = if(condition) View.GONE else View.VISIBLE
 }
 
 fun View.show(condition: Boolean = true) {
-    if(condition) this.visibility = View.VISIBLE
+    this.visibility = if(condition) View.VISIBLE else View.GONE
 }
 
 fun View.enable(condition: Boolean = true) {
-    if(condition) this.isEnabled = true
+    this.isEnabled = condition
 }
 
 fun View.disable(condition: Boolean = true) {
-    if(condition) this.isEnabled = false
+    this.isEnabled = !condition
 }

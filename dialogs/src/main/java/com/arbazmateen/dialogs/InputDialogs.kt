@@ -200,7 +200,7 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
 ** Custom layout dialog
 **************************************************************************/
 class CustomLayoutDialog private constructor(private val layout: Int,
-                                             private val views: Map<Int, View>,
+                                             private val views: List<View>,
                                              private val dialog: AlertDialog) {
 
     fun show() {

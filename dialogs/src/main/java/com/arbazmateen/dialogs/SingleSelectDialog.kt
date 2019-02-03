@@ -7,9 +7,8 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 
 
-class SingleSelectDialog<T>(private val activity: Activity, private val items: List<T>) {
+class SingleSelectDialog<T>(private val activity: Activity, private val items: List<T>, private var title: String = "Select Item") {
 
-    private var title: String = "Select Item"
     private var closeButtonText: String = "Close"
     private var itemListener: ((item: T, data: String, position: Int) -> Unit)? = null
     private lateinit var alertDialog: AlertDialog

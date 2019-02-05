@@ -148,6 +148,8 @@ inline fun <T> justTry(block: () -> T) = try { block() } catch (e: Throwable) {
 /**************************************************************************
 ** String Extensions
 **************************************************************************/
+fun String.trimAll() = this.replace(" ", "")
+
 inline fun String.check(with: String, function: () -> String): String {
     if (this == with) {
         return function.invoke()
@@ -162,7 +164,39 @@ fun String.check(with: String, back: String, default: String = ""): String {
     return default
 }
 
-fun String.toDecimal(default: String = "0"): BigDecimal {
+fun String.toValidInt(default: Int = 0): Int {
+    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        this.toInt()
+    } else {
+        default
+    }
+}
+
+fun String.toValidLong(default: Long = 0): Long {
+    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        this.toLong()
+    } else {
+        default
+    }
+}
+
+fun String.toValidFloat(default: Float = 0.0f): Float {
+    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        this.toFloat()
+    } else {
+        default
+    }
+}
+
+fun String.toValidDouble(default: Double = 0.0): Double {
+    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        this.toDouble()
+    } else {
+        default
+    }
+}
+
+fun String.toValidBigDecimal(default: String = "0"): BigDecimal {
     return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toBigDecimal()
     } else {

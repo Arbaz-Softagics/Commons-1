@@ -5,19 +5,22 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0): RecyclerView(context, attrs, defStyle) {
+class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0):
+    RecyclerView(context, attrs, defStyle) {
 
     companion object STATE {
         const val NONE: Byte = 0
         const val LOADING: Byte = 1
         const val LIST: Byte = 2
         const val EMPTY: Byte = 3
-        const val ADD: Byte = 4
+        const val ADD_NEW_ITEM: Byte = 4
         const val ERROR: Byte = 5
         const val RETRY: Byte = 6
     }
 
-    private var state = NONE
+    private var state = LOADING
+    private var emptyState = EMPTY
+    private var errorState = ERROR
 
     private var loadingView: View? = null
     private var emptyView: View? = null
@@ -39,43 +42,22 @@ class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle
         checkIfEmpty()
     }
 
-    fun setLoadingView(loadingView: View) = apply {
-        this.loadingView = loadingView
-    }
+    fun addHrDivider(context: Context) = apply { this.addItemDecoration(Divider(context)) }
 
-    fun setEmptyView(emptyView: View) = apply {
-        this.emptyView = emptyView
-    }
+    fun defaultEmptyState(emptyState: Byte) = apply { this.emptyState = emptyState }
+    fun defaultErrorState(errorState: Byte) = apply { this.errorState = errorState }
 
-    fun setAddView(addView: View) = apply {
-        this.addView = addView
-    }
+    fun setLoadingView(loadingView: View) = apply { this.loadingView = loadingView }
+    fun setEmptyView(emptyView: View) = apply { this.emptyView = emptyView }
+    fun setAddView(addView: View) = apply { this.addView = addView }
+    fun setErrorView(errorView: View) = apply { this.errorView = errorView }
+    fun setRetryView(retryView: View) = apply { this.retryView = retryView }
 
-    fun setErrorView(errorView: View) = apply {
-        this.errorView = errorView
-    }
+    fun startWithLoading() { setState(LOADING) }
+    fun startWithEmpty() { setState(EMPTY) }
+    fun startWithAddNewItem() { setState(ADD_NEW_ITEM) }
 
-    fun setRetryView(retryView: View) = apply {
-        this.retryView = retryView
-    }
-
-    fun loading() {
-        setState(LOADING)
-    }
-
-    fun empty(addItem: Boolean = false) {
-        if(addItem)
-            setState(ADD)
-        else
-            setState(EMPTY)
-    }
-
-    fun error(retry: Boolean = false) {
-        if(retry)
-            setState(RETRY)
-        else
-            setState(ERROR)
-    }
+    fun error(retry: Boolean = false) { if(retry) setState(RETRY) else setState(ERROR) }
 
     fun setState(state: Byte) {
         this.state = state
@@ -85,7 +67,7 @@ class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle
     private fun checkIfEmpty() {
         if(emptyView != null && adapter != null) {
             if(adapter?.itemCount == 0) {
-                setState(EMPTY)
+                setState(emptyState)
             } else {
                 setState(LIST)
             }
@@ -102,24 +84,32 @@ class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle
             LIST -> {
                 hideAll()
             }
-            EMPTY -> {
-                if(emptyView != null) {
-                    show(emptyView)
+            emptyState -> {
+                when(emptyState) {
+                    EMPTY -> {
+                        if(emptyView != null) {
+                            show(emptyView)
+                        }
+                    }
+                    ADD_NEW_ITEM -> {
+                        if(addView != null) {
+                            show(addView)
+                        }
+                    }
                 }
             }
-            ADD -> {
-                if(addView != null) {
-                    show(addView)
-                }
-            }
-            ERROR -> {
-                if(errorView != null) {
-                    show(errorView)
-                }
-            }
-            RETRY -> {
-                if(retryView != null) {
-                    show(retryView)
+            errorState -> {
+                when(errorState) {
+                    ERROR -> {
+                        if(errorView != null) {
+                            show(errorView)
+                        }
+                    }
+                    RETRY -> {
+                        if(retryView != null) {
+                            show(retryView)
+                        }
+                    }
                 }
             }
             else -> {
@@ -128,13 +118,8 @@ class SimpleRecyclerView(context: Context, attrs: AttributeSet? = null, defStyle
         }
     }
 
-    private fun hide() {
-        visibility = View.GONE
-    }
-
-    private fun show() {
-        visibility = View.VISIBLE
-    }
+    private fun hide() { visibility = View.GONE }
+    private fun show() { visibility = View.VISIBLE }
 
     private fun hide(view: View?) {
         view?.visibility = View.GONE

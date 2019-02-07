@@ -6,10 +6,15 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
-val INFO_ICON = R.drawable.ic_info
-val WARNING_ICON = R.drawable.ic_warning
-val ERROR_ICON = R.drawable.ic_error
-val DELETE_ICON = R.drawable.ic_delete
+object DialogIcon {
+
+    val INFO_ICON = R.drawable.ic_info
+    val WARNING_ICON = R.drawable.ic_warning
+    val ERROR_ICON = R.drawable.ic_error
+    val CANCEL_ICON = R.drawable.ic_cancel
+    val DELETE_ICON = R.drawable.ic_delete
+
+}
 
 fun dialog(context: Context, title: Int, message: String, cancelAble: Boolean, icon: Int): AlertDialog.Builder {
     val dialogBuilder = AlertDialog.Builder(context)
@@ -36,7 +41,7 @@ fun infoDialog(context: Context,
                message: String,
                title: Int = R.string.title_info,
                cancelAble: Boolean = false,
-               icon: Int = INFO_ICON): AlertDialog.Builder {
+               icon: Int = DialogIcon.INFO_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -45,7 +50,7 @@ fun warningDialog(context: Context,
                message: String,
                title: Int = R.string.title_warning,
                cancelAble: Boolean = false,
-               icon: Int = WARNING_ICON): AlertDialog.Builder {
+               icon: Int = DialogIcon.WARNING_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -54,7 +59,7 @@ fun errorDialog(context: Context,
                 message: String,
                 title: Int = R.string.title_error,
                 cancelAble: Boolean = false,
-                icon: Int = ERROR_ICON): AlertDialog.Builder {
+                icon: Int = DialogIcon.ERROR_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -63,7 +68,7 @@ fun confirmDelete(context: Context,
                 message: String,
                 title: Int = R.string.title_confirm_delete,
                 cancelAble: Boolean = false,
-                icon: Int = DELETE_ICON): AlertDialog.Builder {
+                icon: Int = DialogIcon.CANCEL_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -72,7 +77,7 @@ fun infoDialog(context: Context,
                title: String,
                message: String,
                cancelAble: Boolean = false,
-               icon: Int = INFO_ICON): AlertDialog.Builder {
+               icon: Int = DialogIcon.INFO_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -81,7 +86,7 @@ fun warningDialog(context: Context,
                   title: String,
                   message: String,
                   cancelAble: Boolean = false,
-                  icon: Int = WARNING_ICON): AlertDialog.Builder {
+                  icon: Int = DialogIcon.WARNING_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -90,7 +95,7 @@ fun errorDialog(context: Context,
                 title: String,
                 message: String,
                 cancelAble: Boolean = false,
-                icon: Int = ERROR_ICON): AlertDialog.Builder {
+                icon: Int = DialogIcon.ERROR_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 
@@ -99,7 +104,7 @@ fun confirmDelete(context: Context,
                   title: String,
                   message: String,
                   cancelAble: Boolean = false,
-                  icon: Int = DELETE_ICON): AlertDialog.Builder {
+                  icon: Int = DialogIcon.CANCEL_ICON): AlertDialog.Builder {
     return dialog(context, title, message, cancelAble, icon)
 }
 

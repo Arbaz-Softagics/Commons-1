@@ -41,7 +41,7 @@
 
     <Button
             android:id="@+id/detele_btn"
-            android:drawableStart="@drawable/ic_delete"
+            android:drawableStart="@drawable/ic_cancel"
             android:text="Delete Dialog"
             android:textSize="18sp"
             android:drawablePadding="8dp"

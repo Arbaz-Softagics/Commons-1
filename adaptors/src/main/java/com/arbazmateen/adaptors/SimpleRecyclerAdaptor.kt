@@ -311,7 +311,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
         fun addViews(vararg resId: Int) = apply { resId.forEach { viewsList.add(it) } }
         fun addViews(list: List<Int>) = apply { viewsList = list as MutableList<Int> }
 
-        fun addView(viewType: Int, resId: Int) = apply {
+        fun addViewForType(viewType: Int, resId: Int) = apply {
             if (mapViewsList.containsKey(viewType)) {
                 mapViewsList[viewType]?.add(resId)
             } else {
@@ -319,7 +319,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
             }
         }
 
-        fun addViews(viewType: Int, vararg resId: Int) = apply {
+        fun addViewsForType(viewType: Int, vararg resId: Int) = apply {
             resId.forEach {
                 if (mapViewsList.containsKey(viewType)) {
                     mapViewsList[viewType]?.add(it)
@@ -329,7 +329,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
             }
         }
 
-        fun addViews(viewType: Int, list: List<Int>) = apply {
+        fun addViewsForType(viewType: Int, list: List<Int>) = apply {
             if (mapViewsList.containsKey(viewType)) {
                 mapViewsList[viewType]?.addAll(list)
             } else {

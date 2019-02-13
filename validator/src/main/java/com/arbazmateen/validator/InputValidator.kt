@@ -58,6 +58,20 @@ class InputValidator(val text: String, var textInputLayout: TextInputLayout? = n
         return this
     }
 
+    fun required(vararg multiRegex: String, error: String): InputValidator {
+        var match = false
+        multiRegex.forEach { regex ->
+            if (text.matches(Regex(regex))) {
+                match = true
+                return@forEach
+            }
+        }
+        if(!match) {
+            setErrorMessage(error)
+        }
+        return this
+    }
+
     fun requiredIf(condition: Boolean): InputValidator {
         return if (condition) {
             required()
@@ -82,6 +96,21 @@ class InputValidator(val text: String, var textInputLayout: TextInputLayout? = n
         return this
     }
 
+    fun allow(vararg multiRegex: String, error: String = "Invalid input"): InputValidator {
+        if (isOptional()) return this
+        var match = false
+        multiRegex.forEach { regex ->
+            if (text.matches(Regex(regex))) {
+                match = true
+                return@forEach
+            }
+        }
+        if(!match) {
+            setErrorMessage(error)
+        }
+        return this
+    }
+
     fun optional(): InputValidator {
         isOptional = true
         minimumLength = 0
@@ -91,6 +120,12 @@ class InputValidator(val text: String, var textInputLayout: TextInputLayout? = n
     fun optional(regex: String): InputValidator {
         optional()
         allowOnly(regex)
+        return this
+    }
+
+    fun optional(vararg regex: String): InputValidator {
+        optional()
+        allow(*regex)
         return this
     }
 

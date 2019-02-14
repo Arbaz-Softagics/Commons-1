@@ -19,21 +19,30 @@ import java.text.DecimalFormat
 /**************************************************************************
 ** Any extensions
 **************************************************************************/
-fun Any.info(text: String) {
+fun Any.i(text: String) {
     Log.i(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.debug(text: String) {
+fun Any.d(text: String) {
     Log.d(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.warning(text: String) {
+fun Any.w(text: String) {
     Log.w(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.error(text: String) {
+fun Any.e(text: String) {
     Log.e(">>>> ${this.javaClass.simpleName}", text)
 }
+
+val Any.TAG: String
+    get() { return this.javaClass.simpleName }
+
+val Any.CLASS_NAME: String
+    get() { return this.javaClass.simpleName }
+
+val Any.FULL_CLASS_NAME: String
+    get() { return this.javaClass.name }
 
 fun Any.getColor(context: Context, colorId: Int): Int {
     return ContextCompat.getColor(context, colorId)
@@ -204,6 +213,8 @@ fun String.toValidBigDecimal(default: String = "0"): BigDecimal {
     }
 }
 
+fun String.append(before: String = "", after: String = "") = "$before$this$after"
+
 /**************************************************************************
 ** View Extensions
 **************************************************************************/
@@ -215,10 +226,21 @@ fun View.show(condition: Boolean = true) {
     this.visibility = if(condition) View.VISIBLE else View.GONE
 }
 
+fun View.isHide() = this.visibility == View.GONE
+fun View.isShow() = this.visibility == View.VISIBLE
+
+fun View.toggleVisibility() {
+    if(this.isHide()) this.show() else this.hide()
+}
+
 fun View.enable(condition: Boolean = true) {
     this.isEnabled = condition
 }
 
 fun View.disable(condition: Boolean = true) {
     this.isEnabled = !condition
+}
+
+fun View.toggleEnability() {
+    if(this.isEnabled) this.disable() else this.enable()
 }

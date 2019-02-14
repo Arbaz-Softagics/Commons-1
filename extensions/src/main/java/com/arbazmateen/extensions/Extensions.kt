@@ -83,7 +83,19 @@ fun TextView.setHighlightedText(context: Context, text: String, highlightedText:
 /**************************************************************************
 ** Numbers Extensions
 **************************************************************************/
-fun Float.format(precisionCount: Int = 2, default: String = "0"): String {
+fun Float.format(default: String = "0"): String {
+    val value = DecimalFormat("#.00").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Float.format(afterDot: String, default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    return value
+}
+
+fun Float.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
@@ -91,7 +103,19 @@ fun Float.format(precisionCount: Int = 2, default: String = "0"): String {
     return value
 }
 
-fun Float.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
+fun Float.formatNoComma(default: String = "0"): String {
+    val value = DecimalFormat("#.00").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Float.formatNoComma(afterDot: String, default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    return value
+}
+
+fun Float.formatNoComma(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
@@ -99,7 +123,19 @@ fun Float.formatNoComma(precisionCount: Int = 2, default: String = "0"): String 
     return value
 }
 
-fun Double.format(precisionCount: Int = 2, default: String = "0"): String {
+fun Double.format(default: String = "0"): String {
+    val value = DecimalFormat("#.00").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Double.format(afterDot: String, default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    return value
+}
+
+fun Double.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
@@ -107,7 +143,19 @@ fun Double.format(precisionCount: Int = 2, default: String = "0"): String {
     return value
 }
 
-fun Double.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
+fun Double.formatNoComma(default: String = "0"): String {
+    val value = DecimalFormat("#.00").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun Double.formatNoComma(afterDot: String, default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    return value
+}
+
+fun Double.formatNoComma(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
@@ -128,12 +176,24 @@ fun BigInteger.format(default: String = "0"): String {
 }
 
 fun BigDecimal.format(default: String = "0"): String {
-    val value = DecimalFormat("#,###.##").format(this) ?: default
+    val value = DecimalFormat("#,###.00").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
-fun BigDecimal.formatNoComma(precisionCount: Int = 2, default: String = "0"): String {
+fun BigDecimal.formatNoComma(default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", "")
+    return value
+}
+
+fun BigDecimal.formatNoComma(afterDot: String, default: String = "0"): String {
+    val value = DecimalFormat("#.##").format(this) ?: default
+    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    return value
+}
+
+fun BigDecimal.formatNoComma(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
@@ -241,6 +301,6 @@ fun View.disable(condition: Boolean = true) {
     this.isEnabled = !condition
 }
 
-fun View.toggleEnability() {
+fun View.toggleAbility() {
     if(this.isEnabled) this.disable() else this.enable()
 }

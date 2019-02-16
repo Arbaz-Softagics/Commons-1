@@ -126,3 +126,42 @@ fun Date.compare(to: Date): Int {
         else -> -1
     }
 }
+
+fun Date.differenceWith(date: Date?): String {
+
+    if(date == null) return ""
+
+    val diff = this.time - date.time
+    val seconds = diff / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    val days = hours / 24
+    val months = days / 30
+    val years = months / 12
+
+    if(years > 0) return "$years year(s) ago"
+    if(months > 0) return "$months month(s) ago"
+    if(days > 0) return "$days day(s) ago"
+    if(hours > 0) return "$hours hour(s) ago"
+    if(minutes > 0) return "$minutes minute(s) ago"
+    return "$seconds second(s) ago"
+}
+
+fun Date.difference(): String {
+
+    val now = Date().time
+    val diff = now - this.time
+    val seconds = diff / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    val days = hours / 24
+    val months = days / 30
+    val years = months / 12
+
+    if(years > 0) return "$years year(s) ago"
+    if(months > 0) return "$months month(s) ago"
+    if(days > 0) return "$days day(s) ago"
+    if(hours > 0) return "$hours hour(s) ago"
+    if(minutes > 0) return "$minutes minute(s) ago"
+    return "$seconds second(s) ago"
+}

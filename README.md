@@ -3,6 +3,10 @@ Common android components, helper functions, adaptors, dialogs, logs and extenti
 
 ## Modules
 1. [Dialogs](#Dialogs)
+2. Adaptors
+3. Extensions
+4. Preference
+5. Input Validator
 
 ## Dialogs
 1. [Information Dialog](#Information-Dialog)

@@ -1,11 +1,9 @@
 package com.arbazmateen.extensions
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.TextAppearanceSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -67,30 +65,46 @@ fun EditText.textCapitalize(default: String = ""): String {
     return this.text(default).capitalize()
 }
 
+fun EditText.textCapitalizeEach(): String {
+    val text = this.text
+    if(text.isNotEmpty()) {
+        val builder = StringBuilder(text.length)
+        val words = text.split(" ")
+        words.forEach {
+            builder.append(it.capitalize()).append(" ")
+        }
+        return builder.toString().trim()
+    }
+    return text.toString()
+}
+
 /**************************************************************************
 ** Text View Extensions
 **************************************************************************/
 fun TextView.setHighlightedText(context: Context, text: String, highlightedText: String, color: Int = R.color.colorAccent) {
     val spannableString =  SpannableString(text)
     val startIndex = text.toLowerCase().indexOf(highlightedText)
-    val endIndex = startIndex + highlightedText.length
-    val highlightedColor = ColorStateList(arrayOf(intArrayOf()), intArrayOf(ContextCompat.getColor(context, color)))
-    val textAppearanceSpan = TextAppearanceSpan(null, Typeface.NORMAL, -1, highlightedColor, null)
-    spannableString.setSpan(textAppearanceSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-    this.text = spannableString
+    if (startIndex < 0) {
+        this.text = text
+    } else {
+        val endIndex = Math.min(startIndex + highlightedText.length, text.length)
+        spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, color)),
+            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        this.text = spannableString
+    }
 }
 
 /**************************************************************************
 ** Numbers Extensions
 **************************************************************************/
 fun Float.format(default: String = "0"): String {
-    val value = DecimalFormat("#.00").format(this) ?: default
+    val value = DecimalFormat("#,###.00").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun Float.format(afterDot: String, default: String = "0"): String {
-    val value = DecimalFormat("#.##").format(this) ?: default
+    val value = DecimalFormat("#,###.##").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
@@ -98,7 +112,7 @@ fun Float.format(afterDot: String, default: String = "0"): String {
 fun Float.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: default
+    val value = DecimalFormat("#,###.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
@@ -124,13 +138,13 @@ fun Float.formatNoComma(precisionCount: Int, default: String = "0"): String {
 }
 
 fun Double.format(default: String = "0"): String {
-    val value = DecimalFormat("#.00").format(this) ?: default
+    val value = DecimalFormat("#,###.00").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun Double.format(afterDot: String, default: String = "0"): String {
-    val value = DecimalFormat("#.##").format(this) ?: default
+    val value = DecimalFormat("#,###.##").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
@@ -138,7 +152,7 @@ fun Double.format(afterDot: String, default: String = "0"): String {
 fun Double.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
-    val value = DecimalFormat("#.$per").format(this) ?: default
+    val value = DecimalFormat("#,###.$per").format(this) ?: default
     if(value.endsWith(".")) value.replace(".", "")
     return value
 }
@@ -274,6 +288,19 @@ fun String.toValidBigDecimal(default: String = "0"): BigDecimal {
 }
 
 fun String.append(before: String = "", after: String = "") = "$before$this$after"
+
+fun String.textCapitalizeEach(): String {
+    val text = this
+    if(text.isNotEmpty()) {
+        val builder = StringBuilder(text.length)
+        val words = text.split(" ")
+        words.forEach {
+            builder.append(it.capitalize()).append(" ")
+        }
+        return builder.toString().trim()
+    }
+    return text
+}
 
 /**************************************************************************
 ** View Extensions

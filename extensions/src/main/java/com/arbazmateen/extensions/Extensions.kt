@@ -99,7 +99,7 @@ fun TextView.setHighlightedText(context: Context, text: String, highlightedText:
 **************************************************************************/
 fun Float.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if(value == ".00") return default
     return value
 }
 
@@ -119,7 +119,7 @@ fun Float.format(precisionCount: Int, default: String = "0"): String {
 
 fun Float.formatNoComma(default: String = "0"): String {
     val value = DecimalFormat("#.00").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if(value == ".00") return default
     return value
 }
 
@@ -139,7 +139,7 @@ fun Float.formatNoComma(precisionCount: Int, default: String = "0"): String {
 
 fun Double.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if(value == ".00") return default
     return value
 }
 
@@ -159,7 +159,7 @@ fun Double.format(precisionCount: Int, default: String = "0"): String {
 
 fun Double.formatNoComma(default: String = "0"): String {
     val value = DecimalFormat("#.00").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if(value == ".00") return default
     return value
 }
 
@@ -191,7 +191,7 @@ fun BigInteger.format(default: String = "0"): String {
 
 fun BigDecimal.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if(value == ".00") return default
     return value
 }
 

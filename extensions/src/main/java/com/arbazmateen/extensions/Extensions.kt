@@ -13,10 +13,11 @@ import androidx.core.content.ContextCompat
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.text.DecimalFormat
+import java.util.*
 
 /**************************************************************************
-** Any extensions
-**************************************************************************/
+ ** Any extensions
+ **************************************************************************/
 fun Any.i(text: String) {
     Log.i(">>>> ${this.javaClass.simpleName}", text)
 }
@@ -34,13 +35,19 @@ fun Any.e(text: String) {
 }
 
 val Any.TAG: String
-    get() { return this.javaClass.simpleName }
+    get() {
+        return this.javaClass.simpleName
+    }
 
 val Any.CLASS_NAME: String
-    get() { return this.javaClass.simpleName }
+    get() {
+        return this.javaClass.simpleName
+    }
 
 val Any.FULL_CLASS_NAME: String
-    get() { return this.javaClass.name }
+    get() {
+        return this.javaClass.name
+    }
 
 fun Any.getColor(context: Context, colorId: Int): Int {
     return ContextCompat.getColor(context, colorId)
@@ -55,10 +62,42 @@ fun Any.toastShort(context: Context, text: String) {
 }
 
 /**************************************************************************
-** EditText Extensions
-**************************************************************************/
+ ** EditText Extensions
+ **************************************************************************/
 fun EditText.text(default: String = ""): String {
     return if (this.text.trim().isNotBlank()) this.text.trim().toString() else default
+}
+
+fun EditText.int(default: Int = 0): Int {
+    val text = this.text.toString()
+    if (text.matches(Regex("^-?\\d+\$"))) {
+        return text.toInt()
+    }
+    return default
+}
+
+fun EditText.long(default: Long = 0L): Long {
+    val text = this.text.toString()
+    if (text.matches(Regex("^-?\\d+\$"))) {
+        return text.toLong()
+    }
+    return default
+}
+
+fun EditText.float(default: Float = 0.0f): Float {
+    val text = this.text.toString()
+    if (text.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        return text.toFloat()
+    }
+    return default
+}
+
+fun EditText.double(default: Double = 0.0): Double {
+    val text = this.text.toString()
+    if (text.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+        return text.toDouble()
+    }
+    return default
 }
 
 fun EditText.textCapitalize(default: String = ""): String {
@@ -67,7 +106,7 @@ fun EditText.textCapitalize(default: String = ""): String {
 
 fun EditText.textCapitalizeEach(): String {
     val text = this.text
-    if(text.isNotEmpty()) {
+    if (text.isNotEmpty()) {
         val builder = StringBuilder(text.length)
         val words = text.split(" ")
         words.forEach {
@@ -79,33 +118,36 @@ fun EditText.textCapitalizeEach(): String {
 }
 
 /**************************************************************************
-** Text View Extensions
-**************************************************************************/
+ ** Text View Extensions
+ **************************************************************************/
 fun TextView.setHighlightedText(context: Context, text: String, highlightedText: String, color: Int = R.color.colorAccent) {
-    val spannableString =  SpannableString(text)
-    val startIndex = text.toLowerCase().indexOf(highlightedText)
-    if (startIndex < 0) {
-        this.text = text
-    } else {
-        val endIndex = Math.min(startIndex + highlightedText.length, text.length)
-        spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, color)),
-            startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        this.text = spannableString
+    if (text.isBlank() || highlightedText.isBlank() || text.isEmpty() || highlightedText.isEmpty()) this.text = text
+    else {
+        val spannableString = SpannableString(text)
+        val startIndex = text.toLowerCase().indexOf(highlightedText)
+        if (startIndex < 0) {
+            this.text = text
+        } else {
+            val endIndex = Math.min(startIndex + highlightedText.length, text.length)
+            val highlightedColor = ForegroundColorSpan(ContextCompat.getColor(context, color))
+            spannableString.setSpan(highlightedColor, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            this.text = spannableString
+        }
     }
 }
 
 /**************************************************************************
-** Numbers Extensions
-**************************************************************************/
+ ** Numbers Extensions
+ **************************************************************************/
 fun Float.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value == ".00") return default
+    if (value == ".00") return default
     return value
 }
 
 fun Float.format(afterDot: String, default: String = "0"): String {
     val value = DecimalFormat("#,###.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    if (value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
 
@@ -113,19 +155,19 @@ fun Float.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#,###.$per").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun Float.formatNoComma(default: String = "0"): String {
     val value = DecimalFormat("#.00").format(this) ?: default
-    if(value == ".00") return default
+    if (value == ".00") return default
     return value
 }
 
 fun Float.formatNoComma(afterDot: String, default: String = "0"): String {
     val value = DecimalFormat("#.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    if (value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
 
@@ -133,19 +175,19 @@ fun Float.formatNoComma(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun Double.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value == ".00") return default
+    if (value == ".00") return default
     return value
 }
 
 fun Double.format(afterDot: String, default: String = "0"): String {
     val value = DecimalFormat("#,###.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    if (value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
 
@@ -153,19 +195,19 @@ fun Double.format(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#,###.$per").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun Double.formatNoComma(default: String = "0"): String {
     val value = DecimalFormat("#.00").format(this) ?: default
-    if(value == ".00") return default
+    if (value == ".00") return default
     return value
 }
 
 fun Double.formatNoComma(afterDot: String, default: String = "0"): String {
     val value = DecimalFormat("#.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    if (value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
 
@@ -173,7 +215,7 @@ fun Double.formatNoComma(precisionCount: Int, default: String = "0"): String {
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
@@ -191,19 +233,19 @@ fun BigInteger.format(default: String = "0"): String {
 
 fun BigDecimal.format(default: String = "0"): String {
     val value = DecimalFormat("#,###.00").format(this) ?: default
-    if(value == ".00") return default
+    if (value == ".00") return default
     return value
 }
 
 fun BigDecimal.formatNoComma(default: String = "0"): String {
     val value = DecimalFormat("#.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 fun BigDecimal.formatNoComma(afterDot: String, default: String = "0"): String {
     val value = DecimalFormat("#.##").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", ".$afterDot")
+    if (value.endsWith(".")) value.replace(".", ".$afterDot")
     return value
 }
 
@@ -211,26 +253,29 @@ fun BigDecimal.formatNoComma(precisionCount: Int, default: String = "0"): String
     var per = ""
     (1..precisionCount).forEach { per += "#" }
     val value = DecimalFormat("#.$per").format(this) ?: default
-    if(value.endsWith(".")) value.replace(".", "")
+    if (value.endsWith(".")) value.replace(".", "")
     return value
 }
 
 /**************************************************************************
-** Boolean Extensions
-**************************************************************************/
+ ** Boolean Extensions
+ **************************************************************************/
 fun Boolean.toInt() = if (this) 1 else 0
+
 fun Int.toBool() = this == 1
 
 /**************************************************************************
-** Other Extensions
-**************************************************************************/
-inline fun <T> justTry(block: () -> T) = try { block() } catch (e: Throwable) {
+ ** Other Extensions
+ **************************************************************************/
+inline fun <T> justTry(block: () -> T) = try {
+    block()
+} catch (e: Throwable) {
     Log.e("ERROR", e.message)
 }
 
 /**************************************************************************
-** String Extensions
-**************************************************************************/
+ ** String Extensions
+ **************************************************************************/
 fun String.trimAll() = this.replace(" ", "")
 
 inline fun String.check(with: String, function: () -> String): String {
@@ -248,7 +293,7 @@ fun String.check(with: String, back: String, default: String = ""): String {
 }
 
 fun String.toValidInt(default: Int = 0): Int {
-    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toInt()
     } else {
         default
@@ -256,7 +301,7 @@ fun String.toValidInt(default: Int = 0): Int {
 }
 
 fun String.toValidLong(default: Long = 0): Long {
-    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toLong()
     } else {
         default
@@ -264,7 +309,7 @@ fun String.toValidLong(default: Long = 0): Long {
 }
 
 fun String.toValidFloat(default: Float = 0.0f): Float {
-    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toFloat()
     } else {
         default
@@ -272,7 +317,7 @@ fun String.toValidFloat(default: Float = 0.0f): Float {
 }
 
 fun String.toValidDouble(default: Double = 0.0): Double {
-    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toDouble()
     } else {
         default
@@ -280,7 +325,7 @@ fun String.toValidDouble(default: Double = 0.0): Double {
 }
 
 fun String.toValidBigDecimal(default: String = "0"): BigDecimal {
-    return if(this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
         this.toBigDecimal()
     } else {
         default.toBigDecimal()
@@ -291,7 +336,7 @@ fun String.append(before: String = "", after: String = "") = "$before$this$after
 
 fun String.textCapitalizeEach(): String {
     val text = this
-    if(text.isNotEmpty()) {
+    if (text.isNotEmpty()) {
         val builder = StringBuilder(text.length)
         val words = text.split(" ")
         words.forEach {
@@ -303,21 +348,21 @@ fun String.textCapitalizeEach(): String {
 }
 
 /**************************************************************************
-** View Extensions
-**************************************************************************/
+ ** View Extensions
+ **************************************************************************/
 fun View.hide(condition: Boolean = true) {
-    this.visibility = if(condition) View.GONE else View.VISIBLE
+    this.visibility = if (condition) View.GONE else View.VISIBLE
 }
 
 fun View.show(condition: Boolean = true) {
-    this.visibility = if(condition) View.VISIBLE else View.GONE
+    this.visibility = if (condition) View.VISIBLE else View.GONE
 }
 
 fun View.isHide() = this.visibility == View.GONE
 fun View.isShow() = this.visibility == View.VISIBLE
 
 fun View.toggleVisibility() {
-    if(this.isHide()) this.show() else this.hide()
+    if (this.isHide()) this.show() else this.hide()
 }
 
 fun View.enable(condition: Boolean = true) {
@@ -329,5 +374,18 @@ fun View.disable(condition: Boolean = true) {
 }
 
 fun View.toggleAbility() {
-    if(this.isEnabled) this.disable() else this.enable()
+    if (this.isEnabled) this.disable() else this.enable()
+}
+
+/**************************************************************************
+ ** Others
+ **************************************************************************/
+fun getSaltString(characters: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", length: Int = 15): String {
+    val salt = StringBuilder()
+    val rnd = Random()
+    while (salt.length < length) {
+        val index = ((rnd.nextFloat() * characters.length) % characters.length).toInt()
+        salt.append(characters[index])
+    }
+    return salt.toString()
 }

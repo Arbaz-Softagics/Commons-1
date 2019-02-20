@@ -68,33 +68,43 @@ fun EditText.text(default: String = ""): String {
     return if (this.text.trim().isNotBlank()) this.text.trim().toString() else default
 }
 
+fun EditText.isNumber(): Boolean {
+    val text = this.text.trim().toString()
+    return text.matches(Regex("^-?\\d+\$"))
+}
+
+fun EditText.isDecimal(): Boolean {
+    val text = this.text.trim().toString()
+    return text.matches(Regex("^-?\\d+(\\.\\d+)?\$"))
+}
+
 fun EditText.int(default: Int = 0): Int {
-    val text = this.text.toString()
-    if (text.matches(Regex("^-?\\d+\$"))) {
+    val text = this.text.trim().toString()
+    if (this.isNumber()) {
         return text.toInt()
     }
     return default
 }
 
 fun EditText.long(default: Long = 0L): Long {
-    val text = this.text.toString()
-    if (text.matches(Regex("^-?\\d+\$"))) {
+    val text = this.text.trim().toString()
+    if (this.isNumber()) {
         return text.toLong()
     }
     return default
 }
 
 fun EditText.float(default: Float = 0.0f): Float {
-    val text = this.text.toString()
-    if (text.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    val text = this.text.trim().toString()
+    if (this.isDecimal()) {
         return text.toFloat()
     }
     return default
 }
 
 fun EditText.double(default: Double = 0.0): Double {
-    val text = this.text.toString()
-    if (text.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
+    val text = this.text.trim().toString()
+    if (this.isDecimal()) {
         return text.toDouble()
     }
     return default
@@ -292,43 +302,51 @@ fun String.check(with: String, back: String, default: String = ""): String {
     return default
 }
 
+fun String.isNumber(): Boolean {
+    return this.trim().matches(Regex("^-?\\d+\$"))
+}
+
+fun String.isDecimal(): Boolean {
+    return this.trim().matches(Regex("^-?\\d+(\\.\\d+)?\$"))
+}
+
 fun String.toValidInt(default: Int = 0): Int {
-    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
-        this.toInt()
+    return if (this.isNumber()) {
+        this.trim().toInt()
     } else {
         default
     }
 }
 
 fun String.toValidLong(default: Long = 0): Long {
-    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
-        this.toLong()
+    return if (this.isNumber()) {
+        this.trim().toLong()
     } else {
         default
     }
 }
 
 fun String.toValidFloat(default: Float = 0.0f): Float {
-    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
-        this.toFloat()
+    return if (this.isDecimal()) {
+        this.trim().toFloat()
     } else {
         default
     }
 }
 
 fun String.toValidDouble(default: Double = 0.0): Double {
-    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
-        this.toDouble()
+    return if (this.isDecimal()) {
+        this.trim().toDouble()
     } else {
         default
     }
 }
 
 fun String.toValidBigDecimal(default: String = "0"): BigDecimal {
-    return if (this.matches(Regex("^-?\\d+(\\.\\d+)?\$"))) {
-        this.toBigDecimal()
+    return if (this.isDecimal()) {
+        this.trim().toBigDecimal()
     } else {
-        default.toBigDecimal()
+        default.trim().toBigDecimal()
     }
 }
 

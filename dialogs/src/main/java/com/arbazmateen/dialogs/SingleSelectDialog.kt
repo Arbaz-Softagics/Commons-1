@@ -31,6 +31,9 @@ class SingleSelectDialog<T>(
     private var searchAnywhere = false
     private var color: Int = R.color.colorAccent
 
+    private lateinit var emptyView: TextView
+    private lateinit var listView: RecyclerView
+
     fun setItemClickListener(singleItemListener: ((item: T, data: String, position: Int) -> Unit)): SingleSelectDialog<T> {
         this.itemListener = singleItemListener
         return this
@@ -42,7 +45,8 @@ class SingleSelectDialog<T>(
         val dialogView = activity.layoutInflater.inflate(R.layout.dialog_single_select_view, null)
 
         val titleView = dialogView.findViewById(R.id.spinnerTitle) as TextView
-        val listView = dialogView.findViewById(R.id.list) as RecyclerView
+        emptyView = dialogView.findViewById(R.id.empty) as TextView
+        listView = dialogView.findViewById(R.id.list) as RecyclerView
         val searchBox = dialogView.findViewById(R.id.searchBox) as EditText
         val searchSwitch = dialogView.findViewById(R.id.search_switch) as Switch
 
@@ -58,23 +62,30 @@ class SingleSelectDialog<T>(
             alertDialog.dismiss()
         }
 
-        listView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        listView.adapter = adaptor
+        if(items.isEmpty()) {
+            listView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+        } else {
 
-        searchSwitch.setOnCheckedChangeListener { _, checked ->
-            searchAnywhere = checked
-            search(searchBox.text.toString(), searchAnywhere)
-        }
+            listView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            listView.adapter = adaptor
 
-        searchBox.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun onTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
-
-            override fun afterTextChanged(e: Editable) {
+            searchSwitch.setOnCheckedChangeListener { _, checked ->
+                searchAnywhere = checked
                 search(searchBox.text.toString(), searchAnywhere)
             }
-        })
+
+            searchBox.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+                override fun onTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+                override fun afterTextChanged(e: Editable) {
+                    search(searchBox.text.toString(), searchAnywhere)
+                }
+            })
+
+        }
 
         alertDialog.show()
 
@@ -98,8 +109,20 @@ class SingleSelectDialog<T>(
                         it.toString().toLowerCase().startsWith(query.toLowerCase())
                     }
                 }.toList()
-            adaptor.changeDataList(filtered, query, color)
+
+            if(filtered.isEmpty()) {
+                emptyView.text = "NOT FOUND"
+                listView.visibility = View.GONE
+                emptyView.visibility = View.VISIBLE
+            } else {
+                emptyView.visibility = View.GONE
+                listView.visibility = View.VISIBLE
+                adaptor.changeDataList(filtered, query, color)
+            }
+
         } else {
+            emptyView.visibility = View.GONE
+            listView.visibility = View.VISIBLE
             adaptor.changeDataList(items, query, color)
         }
     }

@@ -51,4 +51,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+    <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EMPTY"
+            android:visibility="gone"
+            android:minHeight="350dp"
+            android:gravity="center"
+            android:textSize="16sp"/>
+
 </LinearLayout>

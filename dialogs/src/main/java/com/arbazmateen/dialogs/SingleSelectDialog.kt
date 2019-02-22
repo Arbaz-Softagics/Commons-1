@@ -1,17 +1,34 @@
 package com.arbazmateen.dialogs
 
 import android.app.Activity
+import android.content.Context
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
-import android.widget.*
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Switch
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 
 
-class SingleSelectDialog<T>(private val activity: Activity, private val items: List<T>, private var title: String = "Select Item") {
+class SingleSelectDialog<T>(
+    private val activity: Activity,
+    private val items: List<T>,
+    private var title: String = "Select Item"
+) {
 
-    private var closeButtonText: String = "Close"
+    private lateinit var adaptor: SimpleAdaptor<T>
     private var itemListener: ((item: T, data: String, position: Int) -> Unit)? = null
     private lateinit var alertDialog: AlertDialog
+    private var searchAnywhere = false
+    private var color: Int = R.color.colorAccent
 
     fun setItemClickListener(singleItemListener: ((item: T, data: String, position: Int) -> Unit)): SingleSelectDialog<T> {
         this.itemListener = singleItemListener
@@ -23,42 +40,40 @@ class SingleSelectDialog<T>(private val activity: Activity, private val items: L
 
         val dialogView = activity.layoutInflater.inflate(R.layout.dialog_single_select_view, null)
 
-        val rippleViewClose = dialogView.findViewById(R.id.close) as TextView
         val titleView = dialogView.findViewById(R.id.spinnerTitle) as TextView
-        val listView = dialogView.findViewById(R.id.list) as ListView
+        val listView = dialogView.findViewById(R.id.list) as RecyclerView
         val searchBox = dialogView.findViewById(R.id.searchBox) as EditText
+        val searchSwitch = dialogView.findViewById(R.id.search_switch) as Switch
 
         titleView.text = title
-        rippleViewClose.text = closeButtonText
-
-        val adapter = ArrayAdapter<T>(activity, android.R.layout.simple_list_item_1, items)
-        listView.adapter = adapter
 
         alertDialogBuilder.setView(dialogView)
-
         alertDialog = alertDialogBuilder.create()
-
         alertDialog.setCancelable(true)
 
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, pos, _ ->
-            val t = view.findViewById(android.R.id.text1) as TextView
-            val item = parent.getItemAtPosition(pos) as T
-            if(itemListener != null)
-                itemListener!!.invoke(item, t.text.toString(), pos)
+        adaptor = SimpleAdaptor(activity, items)
+        adaptor.setListener { item, position ->
+            itemListener?.invoke(item, item.toString(), position)
             alertDialog.dismiss()
         }
 
+        listView.adapter = adaptor
+
+        searchSwitch.setOnCheckedChangeListener { _, checked ->
+            searchAnywhere = checked
+            search(searchBox.text.toString(), searchAnywhere)
+        }
+
         searchBox.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun beforeTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(c: CharSequence, i: Int, i1: Int, i2: Int) {}
 
-            override fun afterTextChanged(editable: Editable) {
-                adapter.filter.filter(searchBox.text.toString())
+            override fun afterTextChanged(e: Editable) {
+                search(searchBox.text.toString(), searchAnywhere)
             }
         })
 
-        rippleViewClose.setOnClickListener { alertDialog.dismiss() }
         alertDialog.show()
 
     }
@@ -67,31 +82,98 @@ class SingleSelectDialog<T>(private val activity: Activity, private val items: L
         this.title = title
     }
 
-    fun setCloseButtonText(closeButton: String) {
-        closeButtonText = closeButton
+    fun setHigLightedColor(color: Int) {
+        this.color = color
     }
 
-    class Builder<T>(activity: Activity) {
+    private fun search(query: String, anywhere: Boolean) {
+        if (query.isNotEmpty()) {
+            val filtered = items.asSequence()
+                .filter {
+                    if(anywhere) {
+                        it.toString().toLowerCase().contains(query.toLowerCase())
+                    } else {
+                        it.toString().toLowerCase().startsWith(query.toLowerCase())
+                    }
+                }.toList()
+            adaptor.changeDataList(filtered, query, color)
+        } else {
+            adaptor.changeDataList(items, query, color)
+        }
+    }
 
-        private var items: List<T> = listOf()
-        private val singleSelectListDialog = SingleSelectDialog(activity, items)
+}
 
-        fun setTitle(title: String) = apply { singleSelectListDialog.setTitle(title) }
+class SimpleAdaptor<T>(private val context: Context, private var dataList: List<T>) :
+    RecyclerView.Adapter<SimpleAdaptor<T>.VH>() {
 
-        fun setItems(items: List<T>) = apply { this.items = items }
+    private var queryText = ""
+    private var color: Int = R.color.colorAccent
+    private var listener: ((item: T, position: Int) -> Unit)? = null
 
-        fun setCloseButtonText(closeButton: String) = apply { singleSelectListDialog.setCloseButtonText(closeButton) }
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): VH {
+        return VH(LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false))
+    }
 
-        fun setItemClickListener(singleItemListener: ((item: T, data: String, position: Int) -> Unit)) =
-                apply { singleSelectListDialog.setItemClickListener(singleItemListener) }
+    override fun getItemCount() = dataList.size
 
-        fun build(): SingleSelectDialog<T> {
-            return singleSelectListDialog
+    override fun onBindViewHolder(vh: VH, p: Int) {
+        vh.bind(dataList[p], p)
+    }
+
+    fun setListener(listener: (item: T, position: Int) -> Unit) {
+        this.listener = listener
+    }
+
+    fun changeDataList(list: List<T>, queryText: String, color: Int = R.color.colorAccent) {
+        this.queryText = queryText
+        this.color = color
+        dataList = list
+        notifyDataSetChanged()
+    }
+
+    fun onClick(i: T, p: Int) {
+        listener?.invoke(i, p)
+    }
+
+    inner class VH(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+
+        private val title = view.findViewById<TextView>(R.id.title)
+
+        private var item: T? = null
+        private var pos = -1
+
+        init {
+            view.setOnClickListener(this)
         }
 
-        fun showDialog() {
-            singleSelectListDialog.show()
+        fun bind(i: T, p: Int) {
+            item = i
+            pos = p
+
+            setHighlightedText(context, item.toString(), queryText, color)
         }
+
+        override fun onClick(v: View?) {
+            onClick(item!!, pos)
+        }
+
+        private fun setHighlightedText(context: Context, text: String, highlightedText: String, color: Int = R.color.colorAccent) {
+            if (text.isBlank() || highlightedText.isBlank() || text.isEmpty() || highlightedText.isEmpty()) title.text = text
+            else {
+                val spannableString = SpannableString(text)
+                val startIndex = text.toLowerCase().indexOf(highlightedText)
+                if (startIndex < 0) {
+                    title.text = text
+                } else {
+                    val endIndex = Math.min(startIndex + highlightedText.length, text.length)
+                    val highlightedColor = ForegroundColorSpan(ContextCompat.getColor(context, color))
+                    spannableString.setSpan(highlightedColor, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    title.text = spannableString
+                }
+            }
+        }
+
     }
 
 }

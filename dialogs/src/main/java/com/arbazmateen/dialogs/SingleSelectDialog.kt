@@ -15,6 +15,7 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
@@ -57,6 +58,7 @@ class SingleSelectDialog<T>(
             alertDialog.dismiss()
         }
 
+        listView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         listView.adapter = adaptor
 
         searchSwitch.setOnCheckedChangeListener { _, checked ->
@@ -138,7 +140,7 @@ class SimpleAdaptor<T>(private val context: Context, private var dataList: List<
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private val title = view.findViewById<TextView>(R.id.title)
+        private val title = view.findViewById<TextView>(android.R.id.text1)
 
         private var item: T? = null
         private var pos = -1

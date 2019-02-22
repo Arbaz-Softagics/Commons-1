@@ -14,7 +14,7 @@ class ExampleActivity : AppCompatActivity() {
 
 //        startActivity(Intent(this, DialogExampleActivity::class.java))
 
-        SingleSelectDialog<String>(this, listOf()).show()
+        SingleSelectDialog(this, listOf("Android", "Java", "Kotlin", "Flutter", "Xamerian")).show()
 
     }
 }

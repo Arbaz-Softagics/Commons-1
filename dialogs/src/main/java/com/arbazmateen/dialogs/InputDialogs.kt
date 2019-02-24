@@ -248,7 +248,7 @@ class CustomLayoutDialog private constructor(private val layout: Int,
 
             val view = LayoutInflater.from(context).inflate(R.layout.dialog_single_input, null)
 
-            viewsList.forEach { it ->
+            viewsList.forEach {
                 viewMap[it] = view.findViewById(it)
             }
 

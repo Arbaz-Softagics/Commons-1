@@ -14,7 +14,11 @@ class ExampleActivity : AppCompatActivity() {
 
 //        startActivity(Intent(this, DialogExampleActivity::class.java))
 
-        SingleSelectDialog<String>(this, listOf()).show()
+        SingleSelectDialog(this,
+            listOf("Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread",
+                "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat",
+                "Lollipop", "Marshmallow", "Nougat", "Oreo", "Pie"))
+            .show()
 
     }
 }

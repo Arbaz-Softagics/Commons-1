@@ -3,7 +3,6 @@ package com.arbazmateen.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -21,7 +20,7 @@ import java.io.Serializable
 **************************************************************************/
 abstract class MultiSelectModel(open var itemId: Long,
                                 open var displayText: String,
-                                open var isSelected: Boolean = false): Serializable, Parcelable
+                                open var isSelected: Boolean = false): Serializable
 
 /**************************************************************************
 ** Multi Select Adaptor
@@ -71,6 +70,7 @@ class MultiSelectAdaptor<T : MultiSelectModel>(private val context: Context, pri
             if(item is MultiSelectModel) {
 //                item!!.isSelected = !item!!.isSelected
                 checkBox.isChecked = item!!.isSelected
+                text.text = item!!.displayText
 //                if(item!!.isSelected) {
 //                    if(!selectedIdsList.contains(item!!.itemId)) {
 //                        selectedIdsList.add(item!!.itemId)
@@ -168,14 +168,6 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         val layoutManager = LinearLayoutManager(mContext, RecyclerView.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
 
-        if(searchAble) {
-            searchView.setOnQueryTextListener(this)
-            searchView.onActionViewExpanded()
-            searchView.clearFocus()
-        } else {
-            searchView.visibility = View.GONE
-        }
-
         if(selectAll) {
             selectAllContainer.visibility = View.VISIBLE
         } else {
@@ -201,6 +193,16 @@ class MultiSelectDialog<T : MultiSelectModel>: AppCompatDialogFragment(),
         adaptor.selectedIdsList = preSelectedIds
         adaptor.selectedItemsList = selectedItems
         recyclerView.adapter = adaptor
+
+        if(searchAble) {
+            searchView.setOnQueryTextListener(this)
+            searchView.onActionViewExpanded()
+            searchView.clearFocus()
+        } else {
+            searchView.visibility = View.GONE
+        }
+
+        dialogTitle(title)
 
         return dialog
     }

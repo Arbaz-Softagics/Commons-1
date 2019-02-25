@@ -10,6 +10,12 @@ import kotlinx.android.synthetic.main.activity_dialog_example.*
 
 class DialogExampleActivity : AppCompatActivity() {
 
+    private var selectedIds = mutableListOf<Long>()
+
+    private lateinit var selectedItems: MutableList<DataModel>
+
+    private lateinit var stringData: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dialog_example)
@@ -99,7 +105,7 @@ class DialogExampleActivity : AppCompatActivity() {
 //                "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat",
 //                "Lollipop", "Marshmallow", "Nougat", "Oreo", "Pie")
 
-            val dataList: List<String> = resources.getStringArray(R.array.data_list).toList()
+            val dataList = resources.getStringArray(R.array.data_list).toMutableList()
 
             SingleSelectDialog(this, dataList)
                 .setItemClickListener { _, data, _ ->
@@ -109,6 +115,28 @@ class DialogExampleActivity : AppCompatActivity() {
         }
 
         multi_selection_btn.setOnClickListener {
+
+            val dataList = mutableListOf(DataModel(1L, "One", false),
+                DataModel(2L, "Two", false),
+                DataModel(3L, "Three", false))
+
+            MultiSelectDialog.Builder<DataModel>(this)
+                .dataList(dataList)
+                .maximumSelect(2)
+                .minimumSelect(1)
+                .preSelectedIds(selectedIds)
+                .searchable(true)
+                .dialogTitle("Multi Select Dialog")
+                .canSelectAll(true)
+                .positiveButton("Ok") { selectedIds, selectedItems, stringData ->
+                    this.selectedIds = selectedIds
+                    this.selectedItems = selectedItems
+                    this.stringData = stringData
+                    Toast.makeText(this@DialogExampleActivity, stringData, Toast.LENGTH_LONG).show()
+                }
+                .negativeButton("Cancel") { }
+                .build()
+                .show(supportFragmentManager, "Multi Select Dialog")
 
         }
 

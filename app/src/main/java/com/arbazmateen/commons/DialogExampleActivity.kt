@@ -1,8 +1,9 @@
 package com.arbazmateen.commons
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.arbazmateen.dialogs.*
 import kotlinx.android.synthetic.main.activity_dialog_example.*
@@ -90,6 +91,24 @@ class DialogExampleActivity : AppCompatActivity() {
                 "Loading, Please wait...",  // message
                 true    // cancelable on back press or touch anywhere on the screen
             ).show()
+
+        }
+
+        single_selection_btn.setOnClickListener {
+//            val list = listOf("Cupcake", "Donut", "Eclair", "Froyo", "Gingerbread",
+//                "Honeycomb", "Ice Cream Sandwich", "Jelly Bean", "KitKat",
+//                "Lollipop", "Marshmallow", "Nougat", "Oreo", "Pie")
+
+            val dataList: List<String> = resources.getStringArray(R.array.data_list).toList()
+
+            SingleSelectDialog(this, dataList)
+                .setItemClickListener { _, data, _ ->
+                    Toast.makeText(this, data, Toast.LENGTH_LONG).show()
+                }
+                .show()
+        }
+
+        multi_selection_btn.setOnClickListener {
 
         }
 

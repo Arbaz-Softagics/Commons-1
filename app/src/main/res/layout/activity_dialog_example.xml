@@ -16,7 +16,7 @@
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="16dp"
-            android:layout_width="220dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"/>
 
     <Button
@@ -26,7 +26,7 @@
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="16dp"
-            android:layout_width="220dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"/>
 
     <Button
@@ -36,7 +36,7 @@
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="16dp"
-            android:layout_width="220dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"/>
 
     <Button
@@ -46,7 +46,7 @@
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="16dp"
-            android:layout_width="220dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"/>
 
     <Button
@@ -55,7 +55,25 @@
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:padding="16dp"
-            android:layout_width="220dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"/>
 
+    <Button
+            android:id="@+id/single_selection_btn"
+            android:text="Single Selection Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/multi_selection_btn"
+            android:text="Multi Selection Dialog"
+            android:textSize="18sp"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"/>
+    
 </LinearLayout>

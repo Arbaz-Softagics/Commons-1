@@ -19,7 +19,8 @@ object DateFormat {
     val EEE_DD_MMM_YYYY = "EEE, dd MMM yyyy"    // WED, 04 Jul 2017
     val EEE_DD_MMMM_YYYY = "EEE, dd MMMM yyyy"  // WED, 04 July 2017
 
-    val SQL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss" // 2017-07-17 16:05:30
+    val SQL_DATE_FORMAT = "yyyy-MM-dd"          // 2017-07-17
+    val SQL_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss" // 2017-07-17 16:05:30
 
     val SQL_START_DATE_FORMAT = "yyyy-MM-dd 00:00:00" // 2017-07-17 16:05:30
     val SQL_END_DATE_FORMAT = "yyyy-MM-dd 59:59:59" // 2017-07-17 16:05:30

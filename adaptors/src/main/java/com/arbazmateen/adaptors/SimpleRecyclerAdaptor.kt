@@ -145,6 +145,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
     fun removeItemAtPosition(position: Int) {
         dataList.removeAt(position)
         notifyItemRemoved(position)
+        notifyItemRangeChanged(position, dataList.size)
     }
 
     fun getItem(position: Int) = dataList[position]
@@ -435,7 +436,7 @@ class SimpleRecyclerAdaptor<T> private constructor(private val context: Context,
                 SimpleRecyclerAdaptor(context, dataList, layout, viewsList)
             }
 
-            adaptor.setOptionMenu(optionMenu, optionMenuViewId)
+            adaptor.setOptionMenu(optionMenuViewId, optionMenu)
 
             if (mOnDataBindListener != null) adaptor.setDataBindListener(mOnDataBindListener!!)
             else if (onDataBindListener != null) adaptor.setDataBindListener(onDataBindListener!!)

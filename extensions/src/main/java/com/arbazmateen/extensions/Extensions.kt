@@ -18,19 +18,19 @@ import java.util.*
 /**************************************************************************
  ** Any extensions
  **************************************************************************/
-fun Any.i(text: String) {
+fun Any.info(text: String) {
     Log.i(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.d(text: String) {
+fun Any.debug(text: String) {
     Log.d(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.w(text: String) {
+fun Any.warning(text: String) {
     Log.w(">>>> ${this.javaClass.simpleName}", text)
 }
 
-fun Any.e(text: String) {
+fun Any.error(text: String) {
     Log.e(">>>> ${this.javaClass.simpleName}", text)
 }
 

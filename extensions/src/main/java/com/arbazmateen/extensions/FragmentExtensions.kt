@@ -33,6 +33,15 @@ fun Fragment.hideKeyboard(context: Context, view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun Fragment.showKeyboard(context: Context) {
+    val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+}
+
+fun Fragment.isKeyAvailable(key: String): Boolean {
+    return (arguments != null && arguments!!.containsKey(key))
+}
+
 fun Fragment.getIntValue(key: String, default: Int = 0): Int {
     if(arguments != null && arguments!!.containsKey(key)) {
         return arguments?.getInt(key, default) ?: default

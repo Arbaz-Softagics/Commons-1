@@ -1,5 +1,6 @@
 package com.arbazmateen.extensions
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
@@ -59,6 +60,20 @@ fun Any.toastLong(context: Context, text: String) {
 
 fun Any.toastShort(context: Context, text: String) {
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+}
+
+fun Any.animateIntValue(finalValue: Int, textView: TextView) {
+    val animator: ValueAnimator = ValueAnimator.ofInt(0, finalValue)
+    animator.duration = when {
+        finalValue < 10 -> 250
+        finalValue < 100 -> 500
+        finalValue < 1000 -> 750
+        else -> 1000
+    }
+    animator.addUpdateListener { animation ->
+        textView.text = animation.animatedValue.toString().toInt().format()
+    }
+    animator.start()
 }
 
 /**************************************************************************

@@ -30,6 +30,15 @@ fun Activity.hideKeyboard(view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun Activity.showKeyboard() {
+    val imm = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+}
+
+fun Activity.isKeyAvailable(key: String): Boolean {
+    return (intent != null && intent.extras != null && intent.extras!!.containsKey(key))
+}
+
 fun Activity.getIntValue(key: String, default: Int = 0): Int {
     if(intent != null && intent.extras != null && intent.extras!!.containsKey(key)) {
         return intent.extras?.getInt(key) ?: default

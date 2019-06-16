@@ -4,20 +4,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateFormat {
-    val D_MM_YY = "d MM yy"                     // 4 07 17
-    val DD_MM_YY = "dd MM yy"                   // 04 07 17
-    val D_MMM_YY = "d MMM yy"                   // 4 Jul 17
-    val D_MMM_YYYY = "d MMM yyyy"               // 4 Jul 2017
-    val DD_MM_YYYY = "dd MM yyyy"               // 04 07 2017
-    val DD_MMM_YY = "dd MMM yy"                 // 04 Jul 17
-    val DD_MMM_YYYY = "dd MMM yyyy"             // 04 Jul 2017
-    val DD_MMMM_YY = "dd MMMM yy"               // 04 July 17
-    val DD_MMMM_YYYY = "dd MMMM yyyy"           // 04 July 2017
-    val EEE_DD_MM_YY = "EEE, dd MM yy"          // WED, 04 07 17
-    val EEE_DD_MM_YYYY = "EEE, dd MM yyyy"      // WED, 04 07 2017
-    val EEE_D_MMM_YYYY = "EEE, d MMM yyyy"      // WED, 4 Jul 2017
-    val EEE_DD_MMM_YYYY = "EEE, dd MMM yyyy"    // WED, 04 Jul 2017
-    val EEE_DD_MMMM_YYYY = "EEE, dd MMMM yyyy"  // WED, 04 July 2017
+    const val D_MM_YY = "d MM yy"                     // 4 07 17
+    const val DD_MM_YY = "dd MM yy"                   // 04 07 17
+    const val D_MMM_YY = "d MMM yy"                   // 4 Jul 17
+    const val D_MMM_YYYY = "d MMM yyyy"               // 4 Jul 2017
+    const val DD_MM_YYYY = "dd MM yyyy"               // 04 07 2017
+    const val DD_MMM_YY = "dd MMM yy"                 // 04 Jul 17
+    const val DD_MMM_YYYY = "dd MMM yyyy"             // 04 Jul 2017
+    const val DD_MMMM_YY = "dd MMMM yy"               // 04 July 17
+    const val DD_MMMM_YYYY = "dd MMMM yyyy"           // 04 July 2017
+    const val EEE_DD_MM_YY = "EEE, dd MM yy"          // WED, 04 07 17
+    const val EEE_DD_MM_YYYY = "EEE, dd MM yyyy"      // WED, 04 07 2017
+    const val EEE_D_MMM_YYYY = "EEE, d MMM yyyy"      // WED, 4 Jul 2017
+    const val EEE_DD_MMM_YY = "EEE, dd MMM yy"        // WED, 04 Jul 17
+    const val EEE_DD_MMM_YYYY = "EEE, dd MMM yyyy"    // WED, 04 Jul 2017
+    const val EEE_DD_MMMM_YYYY = "EEE, dd MMMM yyyy"  // WED, 04 July 2017
 
     val SQL_DATE_FORMAT = "yyyy-MM-dd"          // 2017-07-17
     val SQL_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss" // 2017-07-17 16:05:30

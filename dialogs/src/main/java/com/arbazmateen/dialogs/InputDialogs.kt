@@ -2,11 +2,9 @@ package com.arbazmateen.dialogs
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.text.InputType
 import android.view.KeyEvent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
@@ -195,76 +193,4 @@ class SingleInputDialog private constructor(private val dialog: AlertDialog) {
             }
         }
     }
-}
-
-/**************************************************************************
-** Custom layout dialog
-**************************************************************************/
-class CustomLayoutDialog private constructor(private val layout: Int,
-                                             private val viewMap: MutableMap<Int, View>,
-                                             private val dialog: AlertDialog) {
-
-    fun show() {
-        dialog.show()
-    }
-
-    /**************************************************************************
-    ** Builder pattern
-    **************************************************************************/
-    class Builder(private val context: Context) {
-
-        private var layout = 0
-        private var viewsList: MutableList<Int> = mutableListOf()
-        private var viewMap: MutableMap<Int, View> = mutableMapOf()
-
-        private var title = ""
-        private var positiveButtonText = "OK"
-        private var negativeButtonText = "CANCEL"
-
-        private var cancelable = false
-
-        private lateinit var dialogBuilder: AlertDialog.Builder
-        private lateinit var dialog: AlertDialog
-
-        private var submitListener: ((viewMap: Map<Int, View>, dialog: DialogInterface) -> Unit)? = null
-        private var cancelListener: ((dialog: DialogInterface) -> Unit)? = null
-
-
-        fun title(title: String) = apply { this.title = title }
-        fun cancelable(cancelAble: Boolean) = apply { this.cancelable = cancelAble }
-
-        fun setLayout(layout: Int) = apply { this.layout = layout }
-        fun addView(resId: Int) = apply { viewsList.add(resId) }
-        fun addViews(vararg resId: Int) = apply { resId.forEach { viewsList.add(it) } }
-        fun addViews(list: List<Int>) = apply { viewsList = list as MutableList<Int> }
-
-        fun build(): CustomLayoutDialog {
-            initDialog()
-            return CustomLayoutDialog(layout, viewMap, dialog)
-        }
-
-        private fun initDialog() {
-            dialogBuilder = AlertDialog.Builder(context)
-
-            val view = LayoutInflater.from(context).inflate(R.layout.dialog_single_input, null)
-
-            viewsList.forEach {
-                viewMap[it] = view.findViewById(it)
-            }
-
-            dialogBuilder.setTitle(title).setCancelable(cancelable).setView(view)
-
-            dialogBuilder.setPositiveButton(positiveButtonText) { dialog, _ ->
-                submitListener?.invoke(viewMap, dialog)
-            }
-
-            dialogBuilder.setNegativeButton(negativeButtonText) { dialog, _ ->
-                cancelListener?.invoke(dialog)
-            }
-
-            dialog = dialogBuilder.create()
-        }
-
-    }
-
 }
